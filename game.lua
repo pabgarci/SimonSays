@@ -12,13 +12,13 @@ local db = sqlite3.open( path )
 
 local scene = composer.newScene()
 
-local FREQ = 500
+local FREQ = 1000
 local NEXTLEVEL = false
 local TOUCH = false
 local GAMEOVER = true
 local SAVE = true
 
-local SOUND, soundNextLevel, starsTimer
+local SOUND, soundNextLevel, soundGameOver, starsTimer
 
 local rectangle11, rectangle12, rectangle21, rectangle22, rectangle23, rectangle24
 local rectangle31, rectangle32, rectangle33, rectangle34, rectangle35, rectangle36
@@ -43,8 +43,57 @@ local countCheck=1
 
 local starVertices, rectangleStars, showStar1, showStar2, showStar3
 
--- DATABASE
+rectangleBackground = display.newRect( contentWidth/2, contentHeight/2, contentWidth, height)
 
+    rectangle11 = display.newRect( contentWidth/4, contentHeight/2, contentWidth/2, contentHeight)
+    rectangle12 = display.newRect( contentWidth*3/4, contentHeight/2, contentWidth/2, contentHeight)
+    rectangle11.alpha = 0
+    rectangle12.alpha = 0
+
+    rectangle21 = display.newRect( contentWidth/4, contentHeight/4, contentWidth/2, contentHeight/2)
+    rectangle22 = display.newRect( contentWidth*3/4, contentHeight/4, contentWidth/2, contentHeight/2)
+    rectangle23 = display.newRect( contentWidth/4, contentHeight*3/4, contentWidth/2, contentHeight/2)
+    rectangle24 = display.newRect( contentWidth*3/4, contentHeight*3/4, contentWidth/2, contentHeight/2)
+    rectangle21.alpha = 0
+    rectangle22.alpha = 0
+    rectangle23.alpha = 0
+    rectangle24.alpha = 0
+
+    rectangle31 = display.newRect( contentWidth/4, contentHeight/6, contentWidth/2, contentHeight/3)
+    rectangle32 = display.newRect( contentWidth*3/4, contentHeight/6, contentWidth/2, contentHeight/3)
+    rectangle33 = display.newRect( contentWidth/4, contentHeight/2, contentWidth/2, contentHeight/3)
+    rectangle34 = display.newRect( contentWidth*3/4, contentHeight/2, contentWidth/2, contentHeight/3)
+    rectangle35 = display.newRect( contentWidth/4, contentHeight*5/6, contentWidth/2, contentHeight/3)
+    rectangle36 = display.newRect( contentWidth*3/4, contentHeight*5/6, contentWidth/2, contentHeight/3)
+    rectangle31.alpha = 0
+    rectangle32.alpha = 0
+    rectangle33.alpha = 0
+    rectangle34.alpha = 0
+    rectangle35.alpha = 0
+    rectangle36.alpha = 0
+
+    rectangleMessage = display.newRect( contentWidth/2, contentHeight/2, contentWidth, height*2.5/12)
+      
+    textLevel = display.newText ("",contentWidth/4, originY-originY/2, native.systemFontBold, textSize*0.5)
+    textSequence = display.newText ("",contentWidth/4, contentHeight-originY/2, native.systemFontBold, textSize*0.5)
+
+    textMessage1 = display.newText ("",contentWidth/2, (height/12)*4.8, native.systemFontBold, textSizeTitle*0.75)
+    textMessage2 = display.newText ("",contentWidth/2, (height/12)*5.6, native.systemFontBold, textSize*0.5)
+
+
+    starVertices = { 0,-8,1.763,-2.427,7.608,-2.472,2.853,0.927,4.702,6.472,0.0,3.0,-4.702,6.472,-2.853,0.927,-7.608,-2.472,-1.763,-2.427 }
+
+    rectangleStars = display.newRect( contentWidth/2, contentHeight/2, contentWidth, height*2.5/10)
+    textStars1 = display.newText ("", contentWidth/2, (height/12)*4.55, native.systemFontBold, textSizeTitle*0.75)
+    textStars2 = display.newText ("", contentWidth/2, (height/12)*6, native.systemFontBold, textSize*0.5)
+
+    showStar1 = display.newPolygon( 0, (height/12)*5.4, starVertices )
+    showStar2 = display.newPolygon( 0, (height/12)*5.4, starVertices )
+    showStar3 = display.newPolygon( 0, (height/12)*5.4, starVertices )
+
+    soundNextLevel = audio.loadSound("sounds/next-level.mp3")
+    soundGameOver = audio.loadSound("sounds/game-over.mp3")
+    
 local function getSound()
   local boolSound
     for row in db:nrows("SELECT * FROM data WHERE id=4") do
@@ -139,10 +188,11 @@ end
 
 function sound(ach)
   if(SOUND==true)then
+    print("ESTA SONANDO")
   if(ach=="next-level")then
   audio.play(soundNextLevel)
-  elseif(ach=="first-world")then
-    audio.play(soundNextLevel)
+  elseif(ach=="game-over")then
+    audio.play(soundGameOver)
     elseif (ach=="second-world") then
         audio.play(soundNextLevel)
          elseif (ach=="third-world") then
@@ -184,6 +234,7 @@ gameNetwork.request( "unlockAchievement",
 end
 
 function nextLevel()
+  print("nextLevel")
   local levelStars = calculateStars()
   initScreenGame()
   NEXTLEVEL=true
@@ -243,6 +294,7 @@ function checkLevel(worldAux, levelAux)
 end
 
 function changeColor(color)
+  print("changeColor")
   if(world == 1)then
     if(color==1)then
         rectangle11:setFillColor(1,1,0.29)
@@ -306,6 +358,7 @@ function initScreenGame()
       showStar3:setFillColor( 1, 0.9, 0 )
       showStar3.strokeWidth = 1
       showStar3:setStrokeColor( 0.5, 0.5, 0 )
+
       rectangleBackground:setFillColor(0.59,0.99,0.79)
       rectangleMessage:setFillColor(0.59,0.99,0.79)
       textLevel:setFillColor( 1, 0.4, 0.4 )
@@ -368,6 +421,7 @@ end
 
 function gameOver()
       print("game over")
+      sound("game-over")
       showMessage("game over","tap to retry")
       sequence = 1
       countShow=1
@@ -405,6 +459,7 @@ function checkSequence(num)
 end
 
 function showEmptySequence()
+  print("showEmptySequence")
   initScreenGame()
   timer.performWithDelay(FREQ/2,showSequence)
 end
@@ -434,15 +489,14 @@ function saveCurrentTime()
 end
 
 function showSequence()
-
       textLevel.text = "level "..level
       textSequence.text = "seq "..sequence.."/"..level+3
+      TOUCH=false
       if(SAVE)then
         timer.performWithDelay(FREQ,saveCurrentTime())
         SAVE=false
       end
       print("showSequence")
-      initScreenGame()
       
       if(countShow<=sequence)then
        changeColor(arrayGame[countShow])        
@@ -453,12 +507,12 @@ function showSequence()
       if(countShow<=sequence)then
         timer.performWithDelay(FREQ,showEmptySequence)
       else
+        print("limpio")
         timer.performWithDelay(FREQ,initScreenGame)
         TOUCH = true
       end
   countCheck=1
 end
-
 
 function deleteMessage()
   rectangleMessage.alpha = 0
@@ -473,6 +527,7 @@ function deleteMessage()
 end
 
 function click(worldAux, num)
+  print("click")
   if(NEXTLEVEL==true)then
         NEXTLEVEL=false
         GAMEOVER = true
@@ -485,145 +540,7 @@ function click(worldAux, num)
       end
 end
 
-
-
-local function loadLocalPlayerCallback( event )
-   playerName = event.data.alias
-  print("-------------------------------------------"..playerName)
-  if(event.data.isError==false)then
-    googlePlayGames=true
-    print("-------------------------------------------------------------true")
-   else
-   googlePlayGames=false
-   print("-------------------------------------------------------------false")
- end
-
-   --saveSettings()  --save player data locally using your own "saveSettings()" function
-end
-
-local function gameNetworkLoginCallback( event )
-   gameNetwork.request( "loadLocalPlayer", { listener=loadLocalPlayerCallback } )
-   return true
-end
-
-local function gpgsInitCallback( event )
-   gameNetwork.request( "login", { userInitiated=true, listener=gameNetworkLoginCallback } )
-   
-end
-
-local function gameNetworkSetup()
-   if ( system.getInfo("platformName") == "Android" ) then
-      gameNetwork.init( "google", gpgsInitCallback )
-   else
-      gameNetwork.init( "gamecenter", gameNetworkLoginCallback )
-   end
-end
-
-
-
-function scene:create( event )
-    local sceneGroup = self.view
-
-    rectangleBackground = display.newRect( contentWidth/2, contentHeight/2, contentWidth, height)
-
-    rectangle11 = display.newRect( contentWidth/4, contentHeight/2, contentWidth/2, contentHeight)
-    rectangle12 = display.newRect( contentWidth*3/4, contentHeight/2, contentWidth/2, contentHeight)
-    rectangle11.alpha = 0
-    rectangle12.alpha = 0
-
-    rectangle21 = display.newRect( contentWidth/4, contentHeight/4, contentWidth/2, contentHeight/2)
-    rectangle22 = display.newRect( contentWidth*3/4, contentHeight/4, contentWidth/2, contentHeight/2)
-    rectangle23 = display.newRect( contentWidth/4, contentHeight*3/4, contentWidth/2, contentHeight/2)
-    rectangle24 = display.newRect( contentWidth*3/4, contentHeight*3/4, contentWidth/2, contentHeight/2)
-    rectangle21.alpha = 0
-    rectangle22.alpha = 0
-    rectangle23.alpha = 0
-    rectangle24.alpha = 0
-
-    rectangle31 = display.newRect( contentWidth/4, contentHeight/6, contentWidth/2, contentHeight/3)
-    rectangle32 = display.newRect( contentWidth*3/4, contentHeight/6, contentWidth/2, contentHeight/3)
-    rectangle33 = display.newRect( contentWidth/4, contentHeight/2, contentWidth/2, contentHeight/3)
-    rectangle34 = display.newRect( contentWidth*3/4, contentHeight/2, contentWidth/2, contentHeight/3)
-    rectangle35 = display.newRect( contentWidth/4, contentHeight*5/6, contentWidth/2, contentHeight/3)
-    rectangle36 = display.newRect( contentWidth*3/4, contentHeight*5/6, contentWidth/2, contentHeight/3)
-    rectangle31.alpha = 0
-    rectangle32.alpha = 0
-    rectangle33.alpha = 0
-    rectangle34.alpha = 0
-    rectangle35.alpha = 0
-    rectangle36.alpha = 0
-
-    rectangleMessage = display.newRect( contentWidth/2, contentHeight/2, contentWidth, height*2.5/12)
-      
-    textLevel = display.newText ("",contentWidth/4, originY-originY/2, native.systemFontBold, textSize*0.5)
-    textSequence = display.newText ("",contentWidth/4, contentHeight-originY/2, native.systemFontBold, textSize*0.5)
-
-    textMessage1 = display.newText ("",contentWidth/2, (height/12)*4.8, native.systemFontBold, textSizeTitle*0.75)
-    textMessage2 = display.newText ("",contentWidth/2, (height/12)*5.6, native.systemFontBold, textSize*0.5)
-
-
-    starVertices = { 0,-8,1.763,-2.427,7.608,-2.472,2.853,0.927,4.702,6.472,0.0,3.0,-4.702,6.472,-2.853,0.927,-7.608,-2.472,-1.763,-2.427 }
-
-    rectangleStars = display.newRect( contentWidth/2, contentHeight/2, contentWidth, height*2.5/10)
-    textStars1 = display.newText ("", contentWidth/2, (height/12)*4.55, native.systemFontBold, textSizeTitle*0.75)
-    textStars2 = display.newText ("", contentWidth/2, (height/12)*6, native.systemFontBold, textSize*0.5)
-
-    showStar1 = display.newPolygon( 0, (height/12)*5.4, starVertices )
-    showStar2 = display.newPolygon( 0, (height/12)*5.4, starVertices )
-    showStar3 = display.newPolygon( 0, (height/12)*5.4, starVertices )
-
-    soundNextLevel = audio.loadSound("next-level.mp3")
-
-    initScreenGame()
-    sceneGroup:insert(rectangleBackground) 
-
-    sceneGroup:insert(rectangle11)
-    sceneGroup:insert(rectangle12)
-
-    sceneGroup:insert(rectangle21)
-    sceneGroup:insert(rectangle22)
-    sceneGroup:insert(rectangle23)
-    sceneGroup:insert(rectangle24)
-
-    sceneGroup:insert(rectangle31)
-    sceneGroup:insert(rectangle32)
-    sceneGroup:insert(rectangle33)
-    sceneGroup:insert(rectangle34)
-    sceneGroup:insert(rectangle35)
-    sceneGroup:insert(rectangle36)
-
-    sceneGroup:insert(textLevel)
-    sceneGroup:insert(textSequence)
-
- 
-end
-
--- On scene show...
-function scene:show( event )
-    local sceneGroup = self.view
-    if ( event.phase == "will" ) then   
-      gameNetworkSetup()
-      ----------------------------  GAME ------------------------------
-      deleteMessage()
-      initDataBase()
-      initData() 
-      SOUND = getSound()
-      print("SOUND GAME:")
-      print (SOUND)
-      if(composer.getVariable("origin")==1)then
-      world = composer.getVariable("worldTarget")
-      level = composer.getVariable("levelTarget")
-      else
-      checkLevel()
-      end
-      calculateTotalTime()
-      fillArray()
-      showEmptySequence()
-      ----------------------------------------------------------------
-    end
-
-    if ( event.phase == "did" ) then
-        function rectangle11:touch( event )
+function rectangle11:touch( event )
              if event.phase == "ended" and TOUCH  then
                 click (1,1)
                 return true
@@ -713,7 +630,39 @@ function scene:show( event )
               end
         end
 
-        rectangle11:addEventListener( "touch", rectangle11 )
+local function loadLocalPlayerCallback( event )
+   playerName = event.data.alias
+  print("-------------------------------------------"..playerName)
+  if(event.data.isError==false)then
+    googlePlayGames=true
+    print("-------------------------------------------------------------true")
+   else
+   googlePlayGames=false
+   print("-------------------------------------------------------------false")
+ end
+
+   --saveSettings()  --save player data locally using your own "saveSettings()" function
+end
+
+local function gameNetworkLoginCallback( event )
+   gameNetwork.request( "loadLocalPlayer", { listener=loadLocalPlayerCallback } )
+   return true
+end
+
+local function gpgsInitCallback( event )
+   gameNetwork.request( "login", { userInitiated=true, listener=gameNetworkLoginCallback } )
+   
+end
+
+local function gameNetworkSetup()
+   if ( system.getInfo("platformName") == "Android" ) then
+      gameNetwork.init( "google", gpgsInitCallback )
+   else
+      gameNetwork.init( "gamecenter", gameNetworkLoginCallback )
+   end
+end
+
+rectangle11:addEventListener( "touch", rectangle11 )
         rectangle12:addEventListener( "touch", rectangle12 )
         rectangle21:addEventListener( "touch", rectangle21 )
         rectangle22:addEventListener( "touch", rectangle22 )
@@ -725,6 +674,44 @@ function scene:show( event )
         rectangle34:addEventListener( "touch", rectangle34 )
         rectangle35:addEventListener( "touch", rectangle35 )
         rectangle36:addEventListener( "touch", rectangle36 )
+
+function scene:create( event )
+    local sceneGroup = self.view
+    print("create")
+    initScreenGame()
+    sceneGroup:insert(rectangleBackground) 
+
+    sceneGroup:insert(rectangle11)
+    sceneGroup:insert(rectangle12)
+
+    sceneGroup:insert(rectangle21)
+    sceneGroup:insert(rectangle22)
+    sceneGroup:insert(rectangle23)
+    sceneGroup:insert(rectangle24)
+
+    sceneGroup:insert(rectangle31)
+    sceneGroup:insert(rectangle32)
+    sceneGroup:insert(rectangle33)
+    sceneGroup:insert(rectangle34)
+    sceneGroup:insert(rectangle35)
+    sceneGroup:insert(rectangle36)
+
+    sceneGroup:insert(textLevel)
+    sceneGroup:insert(textSequence)
+
+ 
+end
+
+-- On scene show...
+function scene:show( event )
+    local sceneGroup = self.view
+    if ( event.phase == "will" ) then   
+      gameNetworkSetup()
+      
+    end
+
+    if ( event.phase == "did" ) then
+      
     end
 end
 
@@ -738,6 +725,22 @@ end
 function scene:destroy( event )
     local sceneGroup = self.view   
 end
+
+----------------------------  GAME ------------------------------
+      deleteMessage()
+      SOUND = getSound()
+      print("SOUND GAME:")
+      print (SOUND)
+      if(composer.getVariable("origin")==1)then
+      world = composer.getVariable("worldTarget")
+      level = composer.getVariable("levelTarget")
+      else
+      checkLevel()
+      end
+      calculateTotalTime()
+      fillArray()
+      showEmptySequence()
+----------------------------------------------------------------
 
 -- Composer scene listeners
 scene:addEventListener( "create", scene )
