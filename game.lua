@@ -1,42 +1,30 @@
 local sceneName = "game"
 
-local menu = require ("menu")
 local composer = require( "composer" )
 local widget = require( "widget" )
 local sqlite3 = require( "sqlite3" )
 local gameNetwork = require( "gameNetwork" )
-local menuFile = require("menu")
 
-local playerName
-local googlePlayGames
+local playerName, googlePlayGames
 
 local path = system.pathForFile( "data.db", system.DocumentsDirectory )
 local db = sqlite3.open( path )
 
 local scene = composer.newScene()
 
-local FREQ = 1000
+local FREQ = 500
 local NEXTLEVEL = false
 local TOUCH = false
 local GAMEOVER = true
 local SAVE = true
-local SOUND
 
-local soundNextLevel = audio.loadSound("next-level.mp3")
+local SOUND, soundNextLevel, starsTimer
 
-local starsTimer
+local rectangle11, rectangle12, rectangle21, rectangle22, rectangle23, rectangle24
+local rectangle31, rectangle32, rectangle33, rectangle34, rectangle35, rectangle36
+local rectangleBackground, rectangleMessage
 
-local rectangleBackground
-local rectangle1
-local rectangle2
-local rectangle3
-local rectangle4
-local rectangleMessage
-
-local textMessage1
-local textMessage2
-local textSequence
-local textLevel
+local textMessage1, textMessage2, textSequence, textLevel, textStars1, textStars2
 
 local contentWidth = display.contentWidth
 local contentHeight = display.contentHeight
@@ -49,52 +37,11 @@ local textSizeTitle = contentWidth/7
 
 local arrayGame ={}
 local sequence = 1
-local time
-local totalTime
-local stars
-local level 
-local world
+local time, totalTime, stars, level, world
 local countShow=1
 local countCheck=1
 
-local pink = { 1, 0.4, 0.4}
-
-rectangleBackground = display.newRect( contentWidth/2, contentHeight/2, contentWidth, height)
-
-rectangle11 = display.newRect( contentWidth/4, contentHeight/2, contentWidth/2, contentHeight)
-rectangle12 = display.newRect( contentWidth*3/4, contentHeight/2, contentWidth/2, contentHeight)
-rectangle11.alpha = 0
-rectangle12.alpha = 0
-
-rectangle21 = display.newRect( contentWidth/4, contentHeight/4, contentWidth/2, contentHeight/2)
-rectangle22 = display.newRect( contentWidth*3/4, contentHeight/4, contentWidth/2, contentHeight/2)
-rectangle23 = display.newRect( contentWidth/4, contentHeight*3/4, contentWidth/2, contentHeight/2)
-rectangle24 = display.newRect( contentWidth*3/4, contentHeight*3/4, contentWidth/2, contentHeight/2)
-rectangle21.alpha = 0
-rectangle22.alpha = 0
-rectangle23.alpha = 0
-rectangle24.alpha = 0
-
-rectangle31 = display.newRect( contentWidth/4, contentHeight/6, contentWidth/2, contentHeight/3)
-rectangle32 = display.newRect( contentWidth*3/4, contentHeight/6, contentWidth/2, contentHeight/3)
-rectangle33 = display.newRect( contentWidth/4, contentHeight/2, contentWidth/2, contentHeight/3)
-rectangle34 = display.newRect( contentWidth*3/4, contentHeight/2, contentWidth/2, contentHeight/3)
-rectangle35 = display.newRect( contentWidth/4, contentHeight*5/6, contentWidth/2, contentHeight/3)
-rectangle36 = display.newRect( contentWidth*3/4, contentHeight*5/6, contentWidth/2, contentHeight/3)
-rectangle31.alpha = 0
-rectangle32.alpha = 0
-rectangle33.alpha = 0
-rectangle34.alpha = 0
-rectangle35.alpha = 0
-rectangle36.alpha = 0
-
-rectangleMessage = display.newRect( contentWidth/2, contentHeight/2, contentWidth, height*2.5/12)
-  
-textLevel = display.newText ("",contentWidth/4, originY-originY/2, native.systemFontBold, textSize*0.5)
-textSequence = display.newText ("",contentWidth/4, contentHeight-originY/2, native.systemFontBold, textSize*0.5)
-
-textMessage1 = display.newText ("",contentWidth/2, (height/12)*4.8, native.systemFontBold, textSizeTitle*0.75)
-textMessage2 = display.newText ("",contentWidth/2, (height/12)*5.6, native.systemFontBold, textSize*0.5)
+local starVertices, rectangleStars, showStar1, showStar2, showStar3
 
 -- DATABASE
 
@@ -166,6 +113,30 @@ function showMessage(message1, message2)
   textMessage2.alpha = 1
 end
 
+function showStars(message1, message2, levelStars)
+  rectangleStars.alpha = 0.85
+  textStars1.alpha = 1
+  textStars2.alpha = 1
+  textStars1.text = message1
+  textStars2.text = message2
+  if(levelStars==1)then
+    showStar1.x = contentWidth/2
+    showStar1.alpha = 1
+  elseif(levelStars==2)then
+    showStar1.x = contentWidth/2 - contentWidth/20
+    showStar2.x = contentWidth/2 + contentWidth/20
+    showStar1.alpha = 1
+    showStar2.alpha = 1
+  elseif(levelStars==3)then
+    showStar1.x = contentWidth/2 - contentWidth/10
+    showStar2.x = contentWidth/2
+    showStar3.x = contentWidth/2 + contentWidth/10
+    showStar1.alpha = 1
+    showStar2.alpha = 1
+    showStar3.alpha = 1
+  end
+end
+
 function sound(ach)
   if(SOUND==true)then
   if(ach=="next-level")then
@@ -213,43 +184,44 @@ gameNetwork.request( "unlockAchievement",
 end
 
 function nextLevel()
+  local levelStars = calculateStars()
   initScreenGame()
   NEXTLEVEL=true
   TOUCH = true
-  sound("next-level")
   if(world == 1 and level == 6)then
-    showMessage("world 1 completed", "tap to continue" )
+    showStars("world 1 completed", "tap to continue", levelStars)
     unlockAchievement("first-world")
-    setStars(world, level,calculateStars())
+    setStars(world, level, levelStars)
     world = 2
     level = 1
     setCurrentLevel(world,level)
     elseif(world == 2 and level == 12)then
-      showMessage("world 2 completed", "tap to continue" )
+      showStars("world 2 completed", "tap to continue", levelStars)
       unlockAchievement("second-world")
-      setStars(world, level,calculateStars())
+      setStars(world, level, levelStars)
       world = 3
       level = 1
       setCurrentLevel(world,level)
     elseif(world == 3 and level == 18)then
-      showMessage("world 3 completed", "tap to restart" )
+      showStars("world 3 completed", "tap to continue", levelStars)
       unlockAchievement("third-world")
-      setStars(world, level,calculateStars())
+      setStars(world, level, levelStars)
       world = 1
       level = 1
       setCurrentLevel(world,level)
   else
-  showMessage("level "..level.." completed", "tap to continue" )
+  showStars("level "..level.." completed", "tap to continue", levelStars)
   setCurrentLevel(world,level+1)
   unlockAchievement("first-level")
   if(stars==3)then
     unlockAchievement("three-stars")
   end
-  setStars(world, level,calculateStars())
-  print("STARS = "..calculateStars())
+  setStars(world, level, levelStars)
+  print("STARS = "..levelStars)
   level = level + 1
   end
   sequence = 1
+  sound("next-level")
 end
 
 function checkLevel(worldAux, levelAux)
@@ -323,7 +295,17 @@ end
 
 function initScreenGame()
       print("initScreenGame")
-
+      rectangleStars:setFillColor(0.59,0.99,0.79)
+      textStars1:setFillColor( 1, 0.4, 0.4 )
+      showStar1:setFillColor( 1, 0.9, 0 )
+      showStar1.strokeWidth = 1
+      showStar1:setStrokeColor( 0.5, 0.5, 0 )
+      showStar2:setFillColor( 1, 0.9, 0 )
+      showStar2.strokeWidth = 1
+      showStar2:setStrokeColor( 0.5, 0.5, 0 )
+      showStar3:setFillColor( 1, 0.9, 0 )
+      showStar3.strokeWidth = 1
+      showStar3:setStrokeColor( 0.5, 0.5, 0 )
       rectangleBackground:setFillColor(0.59,0.99,0.79)
       rectangleMessage:setFillColor(0.59,0.99,0.79)
       textLevel:setFillColor( 1, 0.4, 0.4 )
@@ -477,10 +459,17 @@ function showSequence()
   countCheck=1
 end
 
+
 function deleteMessage()
   rectangleMessage.alpha = 0
   textMessage1.alpha = 0
   textMessage2.alpha = 0
+  rectangleStars.alpha = 0
+  textStars1.alpha = 0
+  textStars2.alpha = 0
+  showStar1.alpha=0
+  showStar2.alpha=0
+  showStar3.alpha=0
 end
 
 function click(worldAux, num)
@@ -496,95 +485,7 @@ function click(worldAux, num)
       end
 end
 
-function rectangle11:touch( event )
-     if event.phase == "ended" and TOUCH  then
-        click (1,1)
-        return true
-      end
-end
 
-function rectangle12:touch( event )
-     if event.phase == "ended"  and TOUCH then
-      click(1,2)
-        return true
-      end
-end
-
-function rectangle21:touch( event )
-      if event.phase == "ended" and TOUCH then
-        click(2,1)
-         return true
-     end
-
-end
-
-function rectangle22:touch( event )
-      if event.phase == "ended"  and TOUCH then
-        click(2,2)
-        return true
-      end
-end
-
-function rectangle23:touch( event )
-
-     if event.phase == "ended" and TOUCH  then
-      click(2,3)
-        return true
-      end
-
-end
-
-function rectangle24:touch( event )
-     if event.phase == "ended"  and TOUCH then
-      click(2,4)
-        return true
-      end
-end
-
-function rectangle31:touch( event )
-      if event.phase == "ended" and TOUCH then
-        click(3,1)
-         return true
-     end
-
-end
-
-function rectangle32:touch( event )
-      if event.phase == "ended"  and TOUCH then
-         click(3,2)
-        return true
-      end
-end
-
-function rectangle33:touch( event )
-     if event.phase == "ended" and TOUCH  then
-       click(3,3)
-        return true
-      end
-
-end
-
-function rectangle34:touch( event )
-     if event.phase == "ended"  and TOUCH then
-       click(3,4)
-        return true
-      end
-end
-
-function rectangle35:touch( event )
-      if event.phase == "ended" and TOUCH then
-         click(3,5)
-         return true
-     end
-
-end
-
-function rectangle36:touch( event )
-      if event.phase == "ended"  and TOUCH then
-         click(3,6)
-        return true
-      end
-end
 
 local function loadLocalPlayerCallback( event )
    playerName = event.data.alias
@@ -618,23 +519,61 @@ local function gameNetworkSetup()
    end
 end
 
-rectangle11:addEventListener( "touch", rectangle11 )
-rectangle12:addEventListener( "touch", rectangle12 )
 
-rectangle21:addEventListener( "touch", rectangle21 )
-rectangle22:addEventListener( "touch", rectangle22 )
-rectangle23:addEventListener( "touch", rectangle23 )
-rectangle24:addEventListener( "touch", rectangle24 )
-
-rectangle31:addEventListener( "touch", rectangle31 )
-rectangle32:addEventListener( "touch", rectangle32 )
-rectangle33:addEventListener( "touch", rectangle33 )
-rectangle34:addEventListener( "touch", rectangle34 )
-rectangle35:addEventListener( "touch", rectangle35 )
-rectangle36:addEventListener( "touch", rectangle36 )
 
 function scene:create( event )
     local sceneGroup = self.view
+
+    rectangleBackground = display.newRect( contentWidth/2, contentHeight/2, contentWidth, height)
+
+    rectangle11 = display.newRect( contentWidth/4, contentHeight/2, contentWidth/2, contentHeight)
+    rectangle12 = display.newRect( contentWidth*3/4, contentHeight/2, contentWidth/2, contentHeight)
+    rectangle11.alpha = 0
+    rectangle12.alpha = 0
+
+    rectangle21 = display.newRect( contentWidth/4, contentHeight/4, contentWidth/2, contentHeight/2)
+    rectangle22 = display.newRect( contentWidth*3/4, contentHeight/4, contentWidth/2, contentHeight/2)
+    rectangle23 = display.newRect( contentWidth/4, contentHeight*3/4, contentWidth/2, contentHeight/2)
+    rectangle24 = display.newRect( contentWidth*3/4, contentHeight*3/4, contentWidth/2, contentHeight/2)
+    rectangle21.alpha = 0
+    rectangle22.alpha = 0
+    rectangle23.alpha = 0
+    rectangle24.alpha = 0
+
+    rectangle31 = display.newRect( contentWidth/4, contentHeight/6, contentWidth/2, contentHeight/3)
+    rectangle32 = display.newRect( contentWidth*3/4, contentHeight/6, contentWidth/2, contentHeight/3)
+    rectangle33 = display.newRect( contentWidth/4, contentHeight/2, contentWidth/2, contentHeight/3)
+    rectangle34 = display.newRect( contentWidth*3/4, contentHeight/2, contentWidth/2, contentHeight/3)
+    rectangle35 = display.newRect( contentWidth/4, contentHeight*5/6, contentWidth/2, contentHeight/3)
+    rectangle36 = display.newRect( contentWidth*3/4, contentHeight*5/6, contentWidth/2, contentHeight/3)
+    rectangle31.alpha = 0
+    rectangle32.alpha = 0
+    rectangle33.alpha = 0
+    rectangle34.alpha = 0
+    rectangle35.alpha = 0
+    rectangle36.alpha = 0
+
+    rectangleMessage = display.newRect( contentWidth/2, contentHeight/2, contentWidth, height*2.5/12)
+      
+    textLevel = display.newText ("",contentWidth/4, originY-originY/2, native.systemFontBold, textSize*0.5)
+    textSequence = display.newText ("",contentWidth/4, contentHeight-originY/2, native.systemFontBold, textSize*0.5)
+
+    textMessage1 = display.newText ("",contentWidth/2, (height/12)*4.8, native.systemFontBold, textSizeTitle*0.75)
+    textMessage2 = display.newText ("",contentWidth/2, (height/12)*5.6, native.systemFontBold, textSize*0.5)
+
+
+    starVertices = { 0,-8,1.763,-2.427,7.608,-2.472,2.853,0.927,4.702,6.472,0.0,3.0,-4.702,6.472,-2.853,0.927,-7.608,-2.472,-1.763,-2.427 }
+
+    rectangleStars = display.newRect( contentWidth/2, contentHeight/2, contentWidth, height*2.5/10)
+    textStars1 = display.newText ("", contentWidth/2, (height/12)*4.55, native.systemFontBold, textSizeTitle*0.75)
+    textStars2 = display.newText ("", contentWidth/2, (height/12)*6, native.systemFontBold, textSize*0.5)
+
+    showStar1 = display.newPolygon( 0, (height/12)*5.4, starVertices )
+    showStar2 = display.newPolygon( 0, (height/12)*5.4, starVertices )
+    showStar3 = display.newPolygon( 0, (height/12)*5.4, starVertices )
+
+    soundNextLevel = audio.loadSound("next-level.mp3")
+
     initScreenGame()
     sceneGroup:insert(rectangleBackground) 
 
@@ -684,7 +623,108 @@ function scene:show( event )
     end
 
     if ( event.phase == "did" ) then
-      
+        function rectangle11:touch( event )
+             if event.phase == "ended" and TOUCH  then
+                click (1,1)
+                return true
+              end
+        end
+
+        function rectangle12:touch( event )
+             if event.phase == "ended"  and TOUCH then
+              click(1,2)
+                return true
+              end
+        end
+
+        function rectangle21:touch( event )
+              if event.phase == "ended" and TOUCH then
+                click(2,1)
+                 return true
+             end
+
+        end
+
+        function rectangle22:touch( event )
+              if event.phase == "ended"  and TOUCH then
+                click(2,2)
+                return true
+              end
+        end
+
+        function rectangle23:touch( event )
+
+             if event.phase == "ended" and TOUCH  then
+              click(2,3)
+                return true
+              end
+
+        end
+
+        function rectangle24:touch( event )
+             if event.phase == "ended"  and TOUCH then
+              click(2,4)
+                return true
+              end
+        end
+
+        function rectangle31:touch( event )
+              if event.phase == "ended" and TOUCH then
+                click(3,1)
+                 return true
+             end
+
+        end
+
+        function rectangle32:touch( event )
+              if event.phase == "ended"  and TOUCH then
+                 click(3,2)
+                return true
+              end
+        end
+
+        function rectangle33:touch( event )
+             if event.phase == "ended" and TOUCH  then
+               click(3,3)
+                return true
+              end
+
+        end
+
+        function rectangle34:touch( event )
+             if event.phase == "ended"  and TOUCH then
+               click(3,4)
+                return true
+              end
+        end
+
+        function rectangle35:touch( event )
+              if event.phase == "ended" and TOUCH then
+                 click(3,5)
+                 return true
+             end
+
+        end
+
+        function rectangle36:touch( event )
+              if event.phase == "ended"  and TOUCH then
+                 click(3,6)
+                return true
+              end
+        end
+
+        rectangle11:addEventListener( "touch", rectangle11 )
+        rectangle12:addEventListener( "touch", rectangle12 )
+        rectangle21:addEventListener( "touch", rectangle21 )
+        rectangle22:addEventListener( "touch", rectangle22 )
+        rectangle23:addEventListener( "touch", rectangle23 )
+        rectangle24:addEventListener( "touch", rectangle24 )
+        rectangle31:addEventListener( "touch", rectangle31 )
+        rectangle32:addEventListener( "touch", rectangle32 )
+        rectangle33:addEventListener( "touch", rectangle33 )
+        rectangle34:addEventListener( "touch", rectangle34 )
+        rectangle35:addEventListener( "touch", rectangle35 )
+        rectangle36:addEventListener( "touch", rectangle36 )
     end
 end
 
@@ -700,7 +740,6 @@ function scene:destroy( event )
 end
 
 -- Composer scene listeners
-
 scene:addEventListener( "create", scene )
 scene:addEventListener( "show", scene )
 scene:addEventListener( "hide", scene )

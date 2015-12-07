@@ -1,8 +1,7 @@
 local sceneName = "levels"
+
 local composer = require( "composer" )
-
 local sqlite3 = require( "sqlite3" )
-
 local widget = require( "widget" )
 
 local path = system.pathForFile( "data.db", system.DocumentsDirectory )
@@ -10,7 +9,7 @@ local db = sqlite3.open( path )
 
 local scene = composer.newScene()
 
-local maxLevels
+local maxLevels, buttonBack
 
 local background
 local contentWidth = display.contentWidth
@@ -21,36 +20,33 @@ local height = contentHeight-originY*2
 
 local textSize = contentWidth/8
 local textSizeTitle = contentWidth/7
-local buttonBack
-
-local pink = { 1, 0.4, 0.4}
 
 local starVertices = { 0,-8,1.763,-2.427,7.608,-2.472,2.853,0.927,4.702,6.472,0.0,3.0,-4.702,6.472,-2.853,0.927,-7.608,-2.472,-1.763,-2.427 }
 
+local optionsTransition = {
+      effect = "zoomInOutFade",
+      time = 200
+    }
+
 -----------------------------------------------------------
+
+function goBack()
+ composer.gotoScene("worlds", optionsTransition)
+end
 
 local world = composer.getVariable("world")
 
 local function handleLevelSelect( event )
     if ( "ended" == event.phase ) then
-        -- 'event.target' is the button and '.id' is a number indicating which level to go to.  
-        -- The 'game' scene will use this setting to determine which level to load.
-        -- This could be done via passed parameters as well.
-        
+      
         composer.setVariable("worldTarget",world)
         composer.setVariable("levelTarget",event.target.id)
         composer.setVariable("origin",1)
         composer.gotoScene( "game", { effect = "fade", time = 200 } )
-        -- Purge the game scene so we have a fresh start
-        --composer.removeScene( "game", false )
-
-        -- Go to the game scene
-        --composer.gotoScene( "game", { effect="crossFade", time=333 } )
+    
     end
 end
 
--- Declare the Composer event handlers
--- On scene create...
 function scene:create( event )
     local sceneGroup = self.view
 background = display.newRect( contentWidth/2, contentHeight/2, contentWidth, height)
@@ -58,7 +54,6 @@ background = display.newRect( contentWidth/2, contentHeight/2, contentWidth, hei
        sceneGroup:insert(background)
 end
 
--- On scene show...
 function scene:show( event )
     local sceneGroup = self.view
     if ( event.phase == "will" ) then
@@ -85,10 +80,6 @@ local function getStars(worldAux, levelAux)
   return retStars
 end
 
-
-
-    -- Use a scrollView to contain the level buttons (for support of more than one full screen).
-    -- Since this will only scroll vertically, lock horizontal scrolling.
     local levelSelectGroup = widget.newScrollView({
         width = contentWidth,
         height = contentHeight+originY,
@@ -97,21 +88,15 @@ end
         scrollHeight = contentHeight+originY/2,
         backgroundColor = { 0.59,0.99,0.79 },
         horizontalScrollDisabled = true
-        --x = contentWidth/2,
-        --y = (contentHeight/2)+originY
+
     })
-
-
-    -- 'xOffset', 'yOffset' and 'cellCount' are used to position the buttons in the grid.
+  
     local xOffset = contentWidth*3/14
-    local yOffset = -originY
+    local yOffset = -originY*2
     local cellCount = 1
-
-    -- Define the array to hold the buttons
     local buttons = {}
 
-    -- Read 'maxLevels' from the 'myData' table. Loop over them and generating one button for each.
-if(world == 1)then
+    if(world == 1)then
            maxLevels = 6
            elseif(world == 2)then
             maxLevels = 12
@@ -120,7 +105,7 @@ if(world == 1)then
         end
     
     for i = 1, maxLevels do
-        -- Create a button
+
         buttons[i] = widget.newButton({
             label = tostring( i ),
             id = tostring( i ),
@@ -138,18 +123,11 @@ if(world == 1)then
             strokeColor = { default={ 0.8, 0.2, 0.2 }, over={ 0.333, 0.667, 1, 1 } },
             strokeWidth = 2
         })
-        -- Position the button in the grid and add it to the scrollView
+  
         buttons[i].x = xOffset
         buttons[i].y = yOffset
         levelSelectGroup:insert( buttons[i] )
 
-        -- Check to see if the player has achieved (completed) this level.
-        -- The '.unlockedLevels' value tracks the maximum unlocked level.
-        -- First, however, check to make sure that this value has been set.
-        -- If not set (new user), this value should be 1.
-
-        -- If the level is locked, disable the button and fade it out.
-        
         if ( i <= getCurrentLevel(world) ) then
             buttons[i]:setEnabled( true )
             buttons[i].alpha = 1.0
@@ -157,11 +135,6 @@ if(world == 1)then
             buttons[i]:setEnabled( false ) 
             buttons[i].alpha = 0.5 
         end 
-
-        -- Generate stars earned for each level, but only if:
-        -- a. The 'levels' table exists 
-        -- b. There is a 'stars' value inside of the 'levels' table 
-        -- c. The number of stars is greater than 0 (no need to draw zero stars). 
 
         local star = {} 
             for j = 1, getStars(world, i) do
@@ -175,9 +148,6 @@ if(world == 1)then
                 levelSelectGroup:insert( star[j] )
         end
 
-        -- Compute the position of the next button.
-        -- This tutorial draws 5 buttons across.
-        -- It also spaces based on the button width and height + initial offset from the left.
         xOffset = xOffset + contentWidth/3.5
         cellCount = cellCount + 1
         if ( cellCount > 3 ) then
@@ -187,7 +157,6 @@ if(world == 1)then
         end
     end
 
-    -- Place the scrollView into the scene and center it.
     sceneGroup:insert( levelSelectGroup )
     levelSelectGroup.x = display.contentCenterX
     levelSelectGroup.y = display.contentCenterY
@@ -207,18 +176,13 @@ if(world == 1)then
 
         buttonBackLevels.x = display.contentCenterX
         buttonBackLevels.y = contentHeight + originY/2
-        sceneGroup:insert( buttonBackLevels )
-
+        sceneGroup:insert(buttonBackLevels)
 
     elseif ( event.phase == "did" ) then
-
-       
-
          
     end
 end
 
--- On scene hide...
 function scene:hide( event )
     local sceneGroup = self.view
 
@@ -226,13 +190,9 @@ function scene:hide( event )
     end
 end
 
--- On scene destroy...
 function scene:destroy( event )
     local sceneGroup = self.view   
 end
-
-
--- Composer scene listeners
 
 scene:addEventListener( "create", scene )
 scene:addEventListener( "show", scene )

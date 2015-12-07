@@ -1,23 +1,18 @@
 local sceneName = "menu"
+
 local composer = require( "composer" )
-
-local gameNetwork = require( "gameNetwork" )
-local playerName
-local googlePlayGames
-
 local widget = require( "widget" )
-
 local sqlite3 = require( "sqlite3" )
+local gameNetwork = require( "gameNetwork" )
+
+local playerName, googlePlayGames
 
 local path = system.pathForFile( "data.db", system.DocumentsDirectory )
 local db = sqlite3.open( path )
 
--- Load scene with same root filename as this file
 local scene = composer.newScene( sceneName )
 
-local background
-
-local SOUND
+local background, SOUND
 
 local contentWidth = display.contentWidth
 local contentHeight = display.contentHeight
@@ -28,20 +23,9 @@ local height = contentHeight-originY*2
 local textSize = contentWidth/8
 local textSizeTitle = contentWidth/7
 
-local textTitle
-local textPlayer
-local textStart
-local textLevels
-local textRanking
-local textSound
-local textLabel
+local textTitle, textPlayer, textStart, textLevels, textRanking, textSound, textLabel
 
-local buttonStart 
-local buttonLevels
-local buttonRanking
-
-local checkboxSheet
-local checkSound
+local buttonStart, buttonLevels, buttonRanking, checkboxSheet, checkSound
 
 local checkboxOptions = {
         frames =
@@ -95,8 +79,6 @@ function initDataBase()
     tablesetup = [[CREATE TABLE IF NOT EXISTS world3 (id INTEGER PRIMARY KEY, stars);]]
     db:exec( tablesetup )
 end
-
-
 
 local function getCurrentLevel(worldAux)
   local retCurrentLevel
@@ -179,8 +161,6 @@ local function loadLocalPlayerCallback( event )
    googlePlayGames=false
    print("-------------------------------------------------------------false")
  end
-
-   --saveSettings()  --save player data locally using your own "saveSettings()" function
 end
 
 local function gameNetworkLoginCallback( event )
@@ -367,13 +347,9 @@ function scene:hide( event )
     local phase = event.phase
 
     if event.phase == "will" then
-        -- Called when the scene is on screen and is about to move off screen
-        --
-        -- INSERT code here to pause the scene
-        -- e.g. stop timers, stop animation, unload sounds, etc.)
+       
     elseif phase == "did" then
-        -- Called when the scene is now off screen
-   
+       
     end 
 end
 
@@ -381,7 +357,6 @@ end
 function scene:destroy( event )
     local sceneGroup = self.view
 
-   
 end
 
 function goBack(scene)
@@ -400,10 +375,7 @@ local function onKeyEvent( event )
       backscene[scene]()
       return true
     end
-
-    
     end
-
    return false
 end
 

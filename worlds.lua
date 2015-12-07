@@ -1,17 +1,13 @@
 local sceneName = "worlds"
 local composer = require( "composer" )
-
-local gameNetwork = require( "gameNetwork" )
-local playerName
-local googlePlayGames
-
 local widget = require( "widget" )
--- Load scene with same root filename as this file
+local gameNetwork = require( "gameNetwork" )
+
+local playerName, googlePlayGames
+
 local scene = composer.newScene( sceneName )
 
-local background
-
-local pink = { 1, 0.4, 0.4}
+local background, textTitle, buttonWorld1, buttonWorld2, buttonWorld3, buttonBack
 
 local contentWidth = display.contentWidth
 local contentHeight = display.contentHeight
@@ -22,14 +18,16 @@ local height = contentHeight-originY*2
 local textSize = contentWidth/8
 local textSizeTitle = contentWidth/7
 
-local textTitle
-
-local buttonWorld1 
-local buttonWorld2
-local buttonWorld3
-local buttonBack
+local optionsTransition = {
+      effect = "zoomInOutFade",
+      time = 200
+    }
 
 ---------------------------------------------------------------------------------
+
+function goBack()
+ composer.gotoScene("menu", optionsTransition)
+end
 
 function scene:create( event )
     local sceneGroup = self.view
@@ -40,7 +38,6 @@ function scene:create( event )
        textTitle = display.newText ("Select world",contentWidth/2, (height/10)*1, native.systemFontBold, textSizeTitle)
        textTitle:setFillColor( 1, 0.4, 0.4 )
        sceneGroup:insert(textTitle)
-
 
        buttonWorld1 = widget.newButton
         {
@@ -53,7 +50,6 @@ function scene:create( event )
           fontSize = textSize,
           labelColor = { default={ 1, 1, 1 }, over={ 0, 0, 0, 0.5 } },
           fillColor = { default={ 1, 0.4, 0.4}, over={ 1, 0.1, 0.7, 0.4 } },
-    
         }
 
       
@@ -68,7 +64,6 @@ function scene:create( event )
           fontSize = textSize,
           labelColor = { default={ 1, 1, 1 }, over={ 0, 0, 0, 0.5 }},
           fillColor = { default={ 1, 0.4, 0.4}, over={ 1, 0.1, 0.7, 0.4 }},
-    
         }
 
         buttonWorld3 = widget.newButton
@@ -82,7 +77,6 @@ function scene:create( event )
           fontSize = textSize,
           labelColor = { default={ 1, 1, 1 }, over={ 0, 0, 0, 0.5 }},
           fillColor = { default={ 1, 0.4, 0.4}, over={ 1, 0.1, 0.7, 0.4 }},
-    
         }
 
        buttonBack = widget.newButton
@@ -122,8 +116,6 @@ function scene:show( event )
     local phase = event.phase
 
     if phase == "will" then
-       -- Called when the scene is still off screen and is about to move on screen
-       
        
     elseif phase == "did" then
 
@@ -150,10 +142,9 @@ function scene:show( event )
                     composer.gotoScene( "levels", optionsTransition )
                 end
           end
-            
-            buttonWorld1:addEventListener( "touch", buttonWorld1 )
-            buttonWorld2:addEventListener( "touch", buttonWorld2 )
-            buttonWorld3:addEventListener( "touch", buttonWorld3 )
+          buttonWorld1:addEventListener( "touch", buttonWorld1 )
+          buttonWorld2:addEventListener( "touch", buttonWorld2 )
+          buttonWorld3:addEventListener( "touch", buttonWorld3 )
     end 
 end
 
@@ -164,12 +155,9 @@ function scene:hide( event )
     local phase = event.phase
 
     if event.phase == "will" then
-        -- Called when the scene is on screen and is about to move off screen
-        --
-        -- INSERT code here to pause the scene
-        -- e.g. stop timers, stop animation, unload sounds, etc.)
+        
     elseif phase == "did" then
-        -- Called when the scene is now off screen
+       
   
     end 
 end
@@ -178,10 +166,6 @@ end
 function scene:destroy( event )
     local sceneGroup = self.view
 
-    -- Called prior to the removal of scene's "view" (sceneGroup)
-    -- 
-    -- INSERT code here to cleanup the scene
-    -- e.g. remove display objects, remove touch listeners, save state, etc
 end
 
 scene:addEventListener( "create", scene )
