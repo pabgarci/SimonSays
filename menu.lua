@@ -220,7 +220,7 @@ end
 function scene:create( event )
     local sceneGroup = self.view
 
-    checkboxSheet = graphics.newImageSheet( "checkbox.png", checkboxOptions )
+    checkboxSheet = graphics.newImageSheet( "images/checkbox.png", checkboxOptions )
 
     initDataBase()
     initData()
