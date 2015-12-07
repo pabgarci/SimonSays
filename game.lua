@@ -18,7 +18,7 @@ local TOUCH = false
 local GAMEOVER = true
 local SAVE = true
 
-local SOUND, soundNextLevel, soundGameOver, starsTimer
+local SOUND, VIBRATE, soundNextLevel, soundGameOver, starsTimer
 
 local rectangle11, rectangle12, rectangle21, rectangle22, rectangle23, rectangle24
 local rectangle31, rectangle32, rectangle33, rectangle34, rectangle35, rectangle36
@@ -99,7 +99,7 @@ local function getSound()
     for row in db:nrows("SELECT * FROM data WHERE id=4") do
         retSound=row.info
     end
-  if(retSound==NULL) then
+  if(retSound==nil) then
       retSound = true
   end
   print("GET SOUND:")
@@ -110,6 +110,24 @@ local function getSound()
       boolSound=false
     end
   return boolSound  
+end
+
+local function getVibrate()
+  local boolVibrate
+    for row in db:nrows("SELECT * FROM data WHERE id=5") do
+        retVibrate=row.info
+    end
+  if(retVibrate==nil) then
+      boolVibrate = true
+  end
+  print("GET VIBRATE:")
+  print(boolVibrate)
+  if(retVibrate==1)then
+    boolVibrate=true
+    elseif(retVibrate==0)then
+      boolVibrate=false
+    end
+  return boolVibrate  
 end
 
 local function getCurrentLevel(worldAux)
@@ -203,6 +221,13 @@ function sound(ach)
   end
 end
 
+function vibrate()
+      if(getVibrate())then
+        system.vibrate()
+        print("VIBRANDOooooooooooooooooooooooOOOOOOOOOOOOOOOOOooooooooooooooooooooooOOOOOOOOOOOOOOOO")
+      end
+end
+
 function calculateTotalTime()
   totalTime = (level +3)*8
   print("TOTAL TIME = "..totalTime)
@@ -273,6 +298,7 @@ function nextLevel()
   end
   sequence = 1
   sound("next-level")
+  vibrate()
 end
 
 function checkLevel(worldAux, levelAux)
@@ -422,6 +448,7 @@ end
 function gameOver()
       print("game over")
       sound("game-over")
+      vibrate()
       showMessage("game over","tap to retry")
       sequence = 1
       countShow=1
@@ -680,7 +707,6 @@ function scene:create( event )
     print("create")
     initScreenGame()
     sceneGroup:insert(rectangleBackground) 
-
     sceneGroup:insert(rectangle11)
     sceneGroup:insert(rectangle12)
 
@@ -699,7 +725,12 @@ function scene:create( event )
     sceneGroup:insert(textLevel)
     sceneGroup:insert(textSequence)
 
- 
+    sceneGroup:insert(rectangleMessage) 
+    sceneGroup:insert(textMessage1) 
+    sceneGroup:insert(textMessage2) 
+    sceneGroup:insert(rectangleStars) 
+    sceneGroup:insert(textStars1) 
+    sceneGroup:insert(textStars2) 
 end
 
 -- On scene show...
@@ -707,7 +738,8 @@ function scene:show( event )
     local sceneGroup = self.view
     if ( event.phase == "will" ) then   
       gameNetworkSetup()
-      
+      SOUND = getSound()
+      VIBRATE = getVibrate()
     end
 
     if ( event.phase == "did" ) then
@@ -719,6 +751,7 @@ function scene:hide( event )
     local sceneGroup = self.view
 
     if ( event.phase == "will" ) then
+
     end
 end
 
@@ -729,6 +762,7 @@ end
 ----------------------------  GAME ------------------------------
       deleteMessage()
       SOUND = getSound()
+      VIBRATE = getVibrate()
       print("SOUND GAME:")
       print (SOUND)
       if(composer.getVariable("origin")==1)then
@@ -740,6 +774,7 @@ end
       calculateTotalTime()
       fillArray()
       showEmptySequence()
+      
 ----------------------------------------------------------------
 
 -- Composer scene listeners

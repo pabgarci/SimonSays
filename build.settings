@@ -73,16 +73,13 @@ settings =
 	--
 	android =
 	{
+		googlePlayGamesAppId = "921758270969",
 		usesPermissions =
 		{
 			"android.permission.INTERNET",
+			"android.permission.VIBRATE",
 		},
 	},
-
-	android = 
-{
-   googlePlayGamesAppId = "921758270969"  --long App ID number (use yours!)
-},
 
 plugins =
 {

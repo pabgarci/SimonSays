@@ -23,9 +23,9 @@ local height = contentHeight-originY*2
 local textSize = contentWidth/8
 local textSizeTitle = contentWidth/7
 
-local textTitle, textPlayer, textStart, textLevels, textRanking, textSound, textLabel
+local textTitle, textPlayer, textStart, textLevels, textRanking, textSound, textVibrate, textLabel
 
-local buttonStart, buttonLevels, buttonRanking, checkboxSheet, checkSound
+local buttonStart, buttonLevels, buttonRanking, checkboxSheet, checkSound, checkVibrate 
 
 local checkboxOptions = {
         frames =
@@ -103,8 +103,8 @@ local function getSound()
     for row in db:nrows("SELECT * FROM data WHERE id=4") do
         retSound=row.info
     end
-  if(retSound==NULL) then
-      retSound = true
+  if(retSound==nil) then
+      boolSound = true
   end
   print("GET SOUND:")
   print(retSound)
@@ -116,6 +116,23 @@ local function getSound()
   return boolSound  
 end
 
+local function getVibrate()
+  local boolVibrate
+    for row in db:nrows("SELECT * FROM data WHERE id=5") do
+        retVibrate=row.info
+    end
+  if(retVibrate==nil) then
+      boolVibrate = true
+  end
+  print("GET VIBRATE:")
+  print(retVibrate)
+  if(retVibrate==1)then
+    boolVibrate=true
+    elseif(retVibrate==0)then
+      boolVibrate=false
+    end
+  return boolVibrate  
+end
 
 function setSound(snd)
   local sound
@@ -130,6 +147,18 @@ function setSound(snd)
   db:exec( updateQuery )
 end
 
+function setVibrate(vbt)
+  local vibrate
+  if(vbt==true)then
+    vibrate=1
+    elseif(vbt==false)then
+      vibrate=0
+    end
+  local insertQuery = "INSERT INTO data VALUES (5, "..vibrate..");"
+  db:exec( insertQuery )
+  local updateQuery = "UPDATE data SET info="..vibrate.." WHERE id=5;"
+  db:exec( updateQuery )
+end
 
 function initData()
 
@@ -182,10 +211,16 @@ local function gameNetworkSetup()
    end
 end
 
-local function onCheckPress( event )
+local function onSoundPress( event )
     local check = event.target
     SOUND = check.isOn
     setSound(SOUND)
+end
+
+local function onVibratePress( event )
+    local check = event.target
+    VIBRATE = check.isOn
+    setVibrate(VIBRATE)
 end
 
 function getTextLabel()
@@ -221,6 +256,10 @@ function scene:create( event )
         textSound = display.newText ("Sound",contentWidth/1.35, (height/10)*7.35, native.systemFontBold, textSize/2)
         textSound:setFillColor( 1, 0.4, 0.4 )
         sceneGroup:insert(textSound)
+
+        textVibrate = display.newText ("Vibrate",contentWidth/1.37, (height/10)*8, native.systemFontBold, textSize/2)
+        textVibrate:setFillColor( 1, 0.4, 0.4 )
+        sceneGroup:insert(textVibrate)
 
        buttonStart = widget.newButton
         {
@@ -275,11 +314,27 @@ function scene:create( event )
             frameOn = 2,
             frameOff = 1,
             id = "checkSound",
-            onPress = onCheckPress
+            onPress = onSoundPress
+        }
+
+        checkVibrate = widget.newSwitch
+        {
+            left = 190,
+            top = 180,
+            style = "checkbox",
+            sheet = checkboxSheet,
+            initialSwitchState = getVibrate(),
+            frameOn = 2,
+            frameOff = 1,
+            id = "checkVibrate",
+            onPress = onVibratePress
         }
 
         checkSound.x = contentWidth/1.11
         checkSound.y = (height/10)*7.35
+
+        checkVibrate.x = contentWidth/1.11
+        checkVibrate.y = (height/10)*8
 
         buttonStart.x = display.contentCenterX
         buttonStart.y = (height/10)*3.7
@@ -291,6 +346,7 @@ function scene:create( event )
         buttonRanking.y = (height/10)*6.3
 
         sceneGroup:insert(checkSound)
+        sceneGroup:insert(checkVibrate)
         sceneGroup:insert(buttonStart)
         sceneGroup:insert(buttonLevels)
         sceneGroup:insert(buttonRanking)
@@ -378,6 +434,7 @@ local function onKeyEvent( event )
     end
    return false
 end
+
 
 -- Composer scene listeners
 Runtime:addEventListener( "key", onKeyEvent )
