@@ -65,6 +65,16 @@ local optionsTransition = {
       time = 200
     }
 
+local localization = require( "mod_localize" )
+local _s = localization.str
+local locale = system.getPreference("locale", "identifier")
+print("Locale: "..locale)
+ 
+localization:setLocale(locale)
+ 
+print( _s( "Hello" ) )
+
+
 ---------------------------------------------------------------------------------
 
 -- DATABASE

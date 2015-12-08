@@ -1,0 +1,4 @@
+Hello = Hola
+start = empezar
+continue = continuar
+levels = niveles
