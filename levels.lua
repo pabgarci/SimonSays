@@ -31,7 +31,7 @@ local optionsTransition = {
       time = 200
     }
 
------------------------------------------------------------
+---------------------------------------------------------------------
 
 function goBack()
  composer.gotoScene("worlds", optionsTransition)

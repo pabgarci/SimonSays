@@ -231,14 +231,13 @@ local function onSoundPress( event )
     if(SOUND==false)then
       print("soooooooooound")
       print(SOUND)
-      stopSound()
+      audio.fadeOut({channel=1, time=200})
        elseif (SOUND==true)then
-              print("soooooooooound")
-      print(SOUND)
+          print("soooooooooound")
+          print(SOUND)
          audio.play(soundThemeSong,{channel=1,loops=-1})
          audio.fade({channel=1, volume = 1.0})
     end
-
 end
 
 local function onVibratePress( event )
@@ -378,10 +377,6 @@ function scene:create( event )
     
 end
 
-function stopSound()
-  audio.fadeOut({channel=1, time=200})
-end
-
 function scene:show( event )
     local sceneGroup = self.view
     local phase = event.phase
@@ -427,7 +422,7 @@ end
 
 function scene:hide( event )
     local sceneGroup = self.view
-       stopSound()
+       audio.fadeOut({channel=1, time=200})
 end
 
 

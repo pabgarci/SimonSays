@@ -96,8 +96,8 @@ rectangleBackground = display.newRect( contentWidth/2, contentHeight/2, contentW
     showStar2 = display.newPolygon( 0, (height/12)*5.4, starVertices )
     showStar3 = display.newPolygon( 0, (height/12)*5.4, starVertices )
 
-    soundNextLevel = audio.loadSound("sounds/next-level.mp3")
     soundGameOver = audio.loadSound("sounds/game-over.mp3")
+    soundNextLevel = audio.loadSound("sounds/next-level.mp3")
     soundRectangle1 = audio.loadSound("sounds/rectangle_1.mp3")
     soundRectangle2 = audio.loadSound("sounds/rectangle_2.mp3")
     soundRectangle3 = audio.loadSound("sounds/rectangle_3.mp3")
@@ -365,44 +365,44 @@ function changeColor(color)
   if(world == 1)then
     if(color==1)then
         rectangle11:setFillColor(1,1,0.29)
-        if(KEYSOUND==true)then playSound("rectangle-1") end
+        playSound("rectangle-1")
      elseif (color==2)then
         rectangle12:setFillColor(1,0.29,0.29)
-        if(KEYSOUND==true)then playSound("rectangle-2") end
+        playSound("rectangle-2")
       end
     elseif(world == 2)then
         if(color==1)then
         rectangle21:setFillColor(1,1,0.29)
-        if(KEYSOUND==true)then playSound("rectangle-1") end
+        playSound("rectangle-1")
       elseif (color==2)then
         rectangle22:setFillColor(1,0.29,0.29)
-        if(KEYSOUND==true)then playSound("rectangle-2") end
+        playSound("rectangle-2")
       elseif (color==3)then
         rectangle23:setFillColor(0.29,0.29,0.99)
-        if(KEYSOUND==true)then playSound("rectangle-3") end
+        playSound("rectangle-3")
       elseif (color==4)then
         rectangle24:setFillColor(0.64,0.99,0.29)
-        if(KEYSOUND==true)then playSound("rectangle-4") end
+        playSound("rectangle-4")
     end
     elseif(world == 3)then
       if(color==1)then
         rectangle31:setFillColor(1,1,0.29)
-        if(KEYSOUND==true)then playSound("rectangle-1") end
+        playSound("rectangle-1")
       elseif (color==2)then
         rectangle32:setFillColor(1,0.29,0.29)
-       if(KEYSOUND==true)then playSound("rectangle-2") end
+       playSound("rectangle-2")
       elseif (color==3)then
         rectangle33:setFillColor(0.29,0.29,0.99)
-        if(KEYSOUND==true)then playSound("rectangle-3") end
+        playSound("rectangle-3")
       elseif (color==4)then
         rectangle34:setFillColor(0.64,0.99,0.29) 
-       if(KEYSOUND==true)then playSound("rectangle-4") end
+       playSound("rectangle-4")
       elseif (color==5)then
         rectangle35:setFillColor(0.99,0.64,0.29)
-       if(KEYSOUND==true)then playSound("rectangle-5") end
+       playSound("rectangle-5")
       elseif (color==6)then
         rectangle36:setFillColor(0.29,0.99,0.99)
-        if(KEYSOUND==true)then playSound("rectangle-6") end
+        playSound("rectangle-6")
     end
   end
 end
@@ -728,7 +728,7 @@ local function gameNetworkSetup()
    end
 end
 
-rectangle11:addEventListener( "touch", rectangle11 )
+        rectangle11:addEventListener( "touch", rectangle11 )
         rectangle12:addEventListener( "touch", rectangle12 )
         rectangle21:addEventListener( "touch", rectangle21 )
         rectangle22:addEventListener( "touch", rectangle22 )
@@ -782,13 +782,19 @@ function scene:show( event )
     end
 
     if ( event.phase == "did" ) then
-      
+      initScreenGame()
+      sequence=1
+      countCheck=1
+      countShow=1
+      showEmptySequence()
     end
 end
 
 function scene:hide( event )
    --stopSound()
-   KEYSOUND=false
+    audio.stop()
+    SOUND=false
+   --KEYSOUND=false
 end
 
 function scene:destroy( event )
@@ -809,8 +815,6 @@ end
       end
       calculateTotalTime()
       fillArray()
-      
-      
 ----------------------------------------------------------------
 
 -- Composer scene listeners
