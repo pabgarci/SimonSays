@@ -20,8 +20,10 @@ local NEXTLEVEL = false
 local TOUCH = false
 local GAMEOVER = true
 local SAVE = true
-
+local KEYSOUND = true
 local SOUND, VIBRATE, soundNextLevel, soundGameOver, starsTimer
+local timerShow, timerShowEmpty
+local soundRectangle1, soundRectangle2, soundRectangle3, soundRectangle4, soundRectangle5, soundRectangle6
 
 local rectangle11, rectangle12, rectangle21, rectangle22, rectangle23, rectangle24
 local rectangle31, rectangle32, rectangle33, rectangle34, rectangle35, rectangle36
@@ -96,6 +98,13 @@ rectangleBackground = display.newRect( contentWidth/2, contentHeight/2, contentW
 
     soundNextLevel = audio.loadSound("sounds/next-level.mp3")
     soundGameOver = audio.loadSound("sounds/game-over.mp3")
+    soundRectangle1 = audio.loadSound("sounds/rectangle_1.mp3")
+    soundRectangle2 = audio.loadSound("sounds/rectangle_2.mp3")
+    soundRectangle3 = audio.loadSound("sounds/rectangle_3.mp3")
+    soundRectangle4 = audio.loadSound("sounds/rectangle_4.mp3")
+    soundRectangle5 = audio.loadSound("sounds/rectangle_5.mp3")
+    soundRectangle6 = audio.loadSound("sounds/rectangle_6.mp3")
+
     
 local function getSound()
   local boolSound
@@ -207,21 +216,49 @@ function showStars(message1, message2, levelStars)
   end
 end
 
-function sound(ach)
+function playSound(ach)
   if(SOUND==true)then
     print("ESTA SONANDO")
   if(ach=="next-level")then
-  audio.play(soundNextLevel)
+  audio.play(soundNextLevel, {channel=2})
   elseif(ach=="game-over")then
-    audio.play(soundGameOver)
+    audio.play(soundGameOver, {channel=3})
     elseif (ach=="second-world") then
-        audio.play(soundNextLevel)
+        audio.play(soundNextLevel, {channel=4})
          elseif (ach=="third-world") then
-          audio.play(soundNextLevel)
+          audio.play(soundNextLevel, {channel=5})
            elseif (ach=="three-stars") then
-            audio.play(soundNextLevel)
+            audio.play(soundNextLevel, {channel=6})
+              elseif (ach=="rectangle-1") then
+               audio.play(soundRectangle1, {channel=7})
+                elseif (ach=="rectangle-2") then
+                 audio.play(soundRectangle2, {channel=8})
+                   elseif (ach=="rectangle-3") then
+                   audio.play(soundRectangle3, {channel=9})
+                     elseif (ach=="rectangle-4") then
+                     audio.play(soundRectangle4, {channel=10})
+                       elseif (ach=="rectangle-5") then
+                       audio.play(soundRectangle5, {channel=11})
+                         elseif (ach=="rectangle-6") then
+                         audio.play(soundRectangle6, {channel=12})
     end
   end
+end
+
+function stopSound()
+  if(SOUND==true)then
+       audio.stop(2)
+       audio.stop(3)
+       audio.stop(4)
+       audio.stop(5)
+       audio.stop(6)
+       audio.stop(7)
+       audio.stop(8)
+       audio.stop(9)
+       audio.stop(10)
+       audio.stop(11)
+       audio.stop(12)
+  end 
 end
 
 function vibrate()
@@ -301,7 +338,7 @@ function nextLevel()
   level = level + 1
   end
   sequence = 1
-  sound("next-level")
+  playSound("next-level")
   vibrate()
 end
 
@@ -328,44 +365,44 @@ function changeColor(color)
   if(world == 1)then
     if(color==1)then
         rectangle11:setFillColor(1,1,0.29)
-        --rectangle11:setStrokeColor(1,0.29,0.29)
-      elseif (color==2)then
+        if(KEYSOUND==true)then playSound("rectangle-1") end
+     elseif (color==2)then
         rectangle12:setFillColor(1,0.29,0.29)
-        --rectangle12:setStrokeColor(0.41, 0.11, 0.6)
+        if(KEYSOUND==true)then playSound("rectangle-2") end
       end
     elseif(world == 2)then
         if(color==1)then
         rectangle21:setFillColor(1,1,0.29)
-       -- rectangle21:setStrokeColor(0.62,0.62, 0.14)
+        if(KEYSOUND==true)then playSound("rectangle-1") end
       elseif (color==2)then
         rectangle22:setFillColor(1,0.29,0.29)
-       -- rectangle22:setStrokeColor(0.41, 0.11, 0.6)
+        if(KEYSOUND==true)then playSound("rectangle-2") end
       elseif (color==3)then
         rectangle23:setFillColor(0.29,0.29,0.99)
-        --rectangle23:setStrokeColor(0.08, 0.39,0.75)
+        if(KEYSOUND==true)then playSound("rectangle-3") end
       elseif (color==4)then
         rectangle24:setFillColor(0.64,0.99,0.29)
-        --rectangle24:setStrokeColor(0.94,0.42,0)
+        if(KEYSOUND==true)then playSound("rectangle-4") end
     end
     elseif(world == 3)then
       if(color==1)then
         rectangle31:setFillColor(1,1,0.29)
-       -- rectangle31:setStrokeColor(0.62,0.62, 0.14)
+        if(KEYSOUND==true)then playSound("rectangle-1") end
       elseif (color==2)then
         rectangle32:setFillColor(1,0.29,0.29)
-       -- rectangle32:setStrokeColor(0.41, 0.11, 0.6)
+       if(KEYSOUND==true)then playSound("rectangle-2") end
       elseif (color==3)then
         rectangle33:setFillColor(0.29,0.29,0.99)
-        --rectangle33:setStrokeColor(0.08, 0.39,0.75)
+        if(KEYSOUND==true)then playSound("rectangle-3") end
       elseif (color==4)then
-        rectangle34:setFillColor(0.64,0.99,0.29)
-       -- rectangle34:setStrokeColor(0.94,0.42,0)
+        rectangle34:setFillColor(0.64,0.99,0.29) 
+       if(KEYSOUND==true)then playSound("rectangle-4") end
       elseif (color==5)then
         rectangle35:setFillColor(0.99,0.64,0.29)
-       -- rectangle35:setStrokeColor(0.08, 0.39,0.75)
+       if(KEYSOUND==true)then playSound("rectangle-5") end
       elseif (color==6)then
         rectangle36:setFillColor(0.29,0.99,0.99)
-       -- rectangle36:setStrokeColor(0.94,0.42,0)
+        if(KEYSOUND==true)then playSound("rectangle-6") end
     end
   end
 end
@@ -451,7 +488,7 @@ end
 
 function gameOver()
       print("game over")
-      sound("game-over")
+      playSound("game-over")
       vibrate()
       showMessage("game over",_s("tap to retry"))
       sequence = 1
@@ -492,7 +529,7 @@ end
 function showEmptySequence()
   print("showEmptySequence")
   initScreenGame()
-  timer.performWithDelay(FREQ/2,showSequence)
+  timerShowEmpty = timer.performWithDelay(FREQ/2,showSequence)
 end
 
 function calculateStars()
@@ -524,7 +561,7 @@ function showSequence()
       textSequence.text = _s("seq").." "..sequence.."/"..level+3
       TOUCH=false
       if(SAVE)then
-        timer.performWithDelay(FREQ,saveCurrentTime())
+        timerShow = timer.performWithDelay(FREQ,saveCurrentTime())
         SAVE=false
       end
       print("showSequence")
@@ -536,10 +573,10 @@ function showSequence()
       countShow=countShow+1
 
       if(countShow<=sequence)then
-        timer.performWithDelay(FREQ,showEmptySequence)
+        timerShow = timer.performWithDelay(FREQ,showEmptySequence)
       else
         print("limpio")
-        timer.performWithDelay(FREQ,initScreenGame)
+         timer.performWithDelay(FREQ,initScreenGame)
         TOUCH = true
       end
   countCheck=1
@@ -737,6 +774,7 @@ end
 -- On scene show...
 function scene:show( event )
     local sceneGroup = self.view
+    KEYSOUND=true
     if ( event.phase == "will" ) then   
       gameNetworkSetup()
       SOUND = getSound()
@@ -744,20 +782,13 @@ function scene:show( event )
     end
 
     if ( event.phase == "did" ) then
-      initScreenGame()
-      sequence=1
-      countCheck=1
-      countShow=1
-      showEmptySequence()
+      
     end
 end
 
 function scene:hide( event )
-    local sceneGroup = self.view
-
-    if ( event.phase == "will" ) then
-
-    end
+   --stopSound()
+   KEYSOUND=false
 end
 
 function scene:destroy( event )

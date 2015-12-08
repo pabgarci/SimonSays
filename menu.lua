@@ -19,6 +19,7 @@ local db = sqlite3.open( path )
 local scene = composer.newScene( sceneName )
 
 local background, SOUND
+local soundThemeSong = audio.loadSound("sounds/simon_says_theme.mp3")
 
 local contentWidth = display.contentWidth
 local contentHeight = display.contentHeight
@@ -227,6 +228,17 @@ local function onSoundPress( event )
     local check = event.target
     SOUND = check.isOn
     setSound(SOUND)
+    if(SOUND==false)then
+      print("soooooooooound")
+      print(SOUND)
+      stopSound()
+       elseif (SOUND==true)then
+              print("soooooooooound")
+      print(SOUND)
+         audio.play(soundThemeSong,{channel=1,loops=-1})
+         audio.fade({channel=1, volume = 1.0})
+    end
+
 end
 
 local function onVibratePress( event )
@@ -313,6 +325,7 @@ function scene:create( event )
           fontSize = textSize,
           labelColor = { default={ 1, 1, 1 }, over={ 0, 0, 0, 0.5 }},
           fillColor = { default={ 1, 0.4, 0.4}, over={ 1, 0.4, 0.4, 0.7 }},
+    
         }
 
         checkSound = widget.newSwitch
@@ -365,18 +378,21 @@ function scene:create( event )
     
 end
 
+function stopSound()
+  audio.fadeOut({channel=1, time=200})
+end
+
 function scene:show( event )
     local sceneGroup = self.view
     local phase = event.phase
 
-    
-
-    if phase == "will" then
-       
-       
-
-    elseif phase == "did" then
-
+    if phase == "did" then
+          SOUND = getSound()
+          if(SOUND)then
+          audio.play(soundThemeSong,{channel=1,loops=-1})
+          audio.fade({channel=1, volume = 1.0})
+          end
+          
           function buttonStart:touch ( event )
                 local phase = event.phase
                 if "ended" == phase then
@@ -411,13 +427,7 @@ end
 
 function scene:hide( event )
     local sceneGroup = self.view
-    local phase = event.phase
-
-    if event.phase == "will" then
-       
-    elseif phase == "did" then
-       
-    end 
+       stopSound()
 end
 
 
