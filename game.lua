@@ -268,8 +268,18 @@ function vibrate()
       end
 end
 
+function rec (n)
+  local aux=0
+  for i=1,n do
+    aux=aux+n
+  end
+  print("AUX: "..aux)
+        return aux
+    end
+
 function calculateTotalTime()
-  totalTime = (level +3)*8
+  local recResult = rec(level +3)
+  totalTime = recResult*1500/FREQ
   print("TOTAL TIME = "..totalTime)
 end
 
