@@ -1,0 +1,15 @@
+Hello = Hola
+Who Says? = ¿Quién dice?
+start = empezar
+continue = continuar
+level = nivel
+levels = niveles
+world = mundo
+sound = sonido
+vibrate = vibración
+ranking = clasificación
+back = atrás
+select world = mundos
+tap to continue = pulsa para continuar
+tap to retry = pulsa para reintentar
+seq = seq

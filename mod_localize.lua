@@ -11,8 +11,7 @@
 -- @module mod_localize
 local _M = {}
 
-_M.locale = 'en_US'
-_M.locale = 'es_ES'
+_M.locale = 'en'
 _M.langTbl = {}
 ---Sets the locale for localization.
 -- See: http://framework.zend.com/manual/1.12/en/zend.locale.appendix.html
@@ -30,6 +29,10 @@ function _M:setLocale( locale )
 
 	--load lang file
 	--fix by Misael M.
+	if(self.locale~="es" and self.locale~="en")then
+		self.locale="en"
+		print("Not translation available for you locate, default=en")
+	end
 	local langFilePath = system.pathForFile( "lang/" .. self.locale .. ".txt", system.ResourceDirectory )
 
 	--loop over translated lines, build lang tbl

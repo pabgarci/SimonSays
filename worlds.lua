@@ -2,6 +2,9 @@ local sceneName = "worlds"
 local composer = require( "composer" )
 local widget = require( "widget" )
 local gameNetwork = require( "gameNetwork" )
+local localization = require( "mod_localize" )
+
+local _s = localization.str
 
 local playerName, googlePlayGames
 
@@ -23,6 +26,7 @@ local optionsTransition = {
       time = 200
     }
 
+
 ---------------------------------------------------------------------------------
 
 function goBack()
@@ -35,13 +39,13 @@ function scene:create( event )
        background:setFillColor(0.59,0.99,0.79)
        sceneGroup:insert(background)
 
-       textTitle = display.newText ("Select world",contentWidth/2, (height/10)*1, native.systemFontBold, textSizeTitle)
+       textTitle = display.newText (_s("select world"),contentWidth/2, (height/10)*1, native.systemFontBold, textSizeTitle)
        textTitle:setFillColor( 1, 0.4, 0.4 )
        sceneGroup:insert(textTitle)
 
        buttonWorld1 = widget.newButton
         {
-          label = "world 1",
+          label = _s("world").." 1",
           emboss = false,
           shape="roundedRect",
           width = contentWidth*0.9,
@@ -55,7 +59,7 @@ function scene:create( event )
       
         buttonWorld2 = widget.newButton
         {
-          label = "world 2",
+          label = _s("world").." 2",
           emboss = false,
           shape="roundedRect",
           width = contentWidth*0.9,
@@ -68,7 +72,7 @@ function scene:create( event )
 
         buttonWorld3 = widget.newButton
         {
-          label = "world 3",
+          label = _s("world").." 3",
           emboss = false,
           shape="roundedRect",
           width = contentWidth*0.9,
@@ -81,7 +85,7 @@ function scene:create( event )
 
        buttonBack = widget.newButton
         {
-          label = "back",
+          label = _s("back"),
           emboss = false,
           shape="roundedRect",
           width = contentWidth*0.9,

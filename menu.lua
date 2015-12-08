@@ -4,6 +4,12 @@ local composer = require( "composer" )
 local widget = require( "widget" )
 local sqlite3 = require( "sqlite3" )
 local gameNetwork = require( "gameNetwork" )
+local localization = require( "mod_localize" )
+
+local _s = localization.str
+local locale = system.getPreference("locale", "language")
+
+localization:setLocale(locale)
 
 local playerName, googlePlayGames
 
@@ -54,7 +60,6 @@ local checkboxOptions = {
 
 local backscene = {
     ["menu"] = function () os.exit() end,
-    ["ranking"] = function () goBack ("menu") end,
     ["levels"] = function () goBack ("worlds") end,
     ["game"] = function () goBack ("menu") end,
     ["worlds"] = function () goBack ("levels") end
@@ -65,12 +70,9 @@ local optionsTransition = {
       time = 200
     }
 
-local localization = require( "mod_localize" )
-local _s = localization.str
-local locale = system.getPreference("locale", "identifier")
+
 print("Locale: "..locale)
  
-localization:setLocale(locale)
  
 print( _s( "Hello" ) )
 
@@ -236,9 +238,9 @@ end
 function getTextLabel()
     if(getCurrentLevel(1)~=1)then
       print("current level "..getCurrentLevel(1))
-      textLabel = "continue"
+      textLabel = _s("continue")
     else
-      textLabel = "start"
+      textLabel = _s("start")
     end
 end
 
@@ -255,7 +257,7 @@ function scene:create( event )
        background:setFillColor(0.59,0.99,0.79)
        sceneGroup:insert(background)
 
-       textTitle = display.newText ("Who Says?",contentWidth/2, (height/10)*1, native.systemFontBold, textSizeTitle)
+       textTitle = display.newText (_s("Who Says?"),contentWidth/2, (height/10)*1, native.systemFontBold, textSizeTitle)
        textTitle:setFillColor( 1, 0.4, 0.4 )
        sceneGroup:insert(textTitle)
 
@@ -263,11 +265,11 @@ function scene:create( event )
         textPlayer:setFillColor( 1, 0.4, 0.4 )
         sceneGroup:insert(textPlayer)
 
-        textSound = display.newText ("Sound",contentWidth/1.35, (height/10)*7.35, native.systemFontBold, textSize/2)
+        textSound = display.newText (_s("sound"),contentWidth/1.35, (height/10)*7.35, native.systemFontBold, textSize/2)
         textSound:setFillColor( 1, 0.4, 0.4 )
         sceneGroup:insert(textSound)
 
-        textVibrate = display.newText ("Vibrate",contentWidth/1.37, (height/10)*8, native.systemFontBold, textSize/2)
+        textVibrate = display.newText (_s("vibrate"),contentWidth/1.4, (height/10)*8, native.systemFontBold, textSize/2)
         textVibrate:setFillColor( 1, 0.4, 0.4 )
         sceneGroup:insert(textVibrate)
 
@@ -288,7 +290,7 @@ function scene:create( event )
       
         buttonLevels = widget.newButton
         {
-          label = "levels",
+          label = _s("levels"),
           emboss = false,
           shape="roundedRect",
           width = contentWidth*0.9,
@@ -302,7 +304,7 @@ function scene:create( event )
 
         buttonRanking = widget.newButton
         {
-          label = "ranking",
+          label = _s("ranking"),
           emboss = false,
           shape="roundedRect",
           width = contentWidth*0.9,
@@ -311,7 +313,6 @@ function scene:create( event )
           fontSize = textSize,
           labelColor = { default={ 1, 1, 1 }, over={ 0, 0, 0, 0.5 }},
           fillColor = { default={ 1, 0.4, 0.4}, over={ 1, 0.4, 0.4, 0.7 }},
-    
         }
 
         checkSound = widget.newSwitch
@@ -394,7 +395,7 @@ function scene:show( event )
           function buttonRanking:touch ( event )
                 local phase = event.phase
                 if "ended" == phase then
-                    composer.gotoScene( "ranking", optionsTransition )
+                    gameNetwork.show( "achievements" )
                 end
           end
             

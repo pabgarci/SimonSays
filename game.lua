@@ -4,6 +4,9 @@ local composer = require( "composer" )
 local widget = require( "widget" )
 local sqlite3 = require( "sqlite3" )
 local gameNetwork = require( "gameNetwork" )
+local localization = require( "mod_localize" )
+
+local _s = localization.str
 
 local playerName, googlePlayGames
 
@@ -246,6 +249,7 @@ if(ach=="first-level")then
            elseif (ach=="three-stars") then
             id="CgkI-YvM6OkaEAIQCQ"
     end
+
 gameNetwork.request( "unlockAchievement",
     {
         achievement =
@@ -265,28 +269,28 @@ function nextLevel()
   NEXTLEVEL=true
   TOUCH = true
   if(world == 1 and level == 6)then
-    showStars("world 1 completed", "tap to continue", levelStars)
+    showStars(_s("world").." 1 ".._s("completed"), _s("tap to continue"), levelStars)
     unlockAchievement("first-world")
     setStars(world, level, levelStars)
     world = 2
     level = 1
     setCurrentLevel(world,level)
     elseif(world == 2 and level == 12)then
-      showStars("world 2 completed", "tap to continue", levelStars)
+      showStars("world 2 completed", _s("tap to continue"), levelStars)
       unlockAchievement("second-world")
       setStars(world, level, levelStars)
       world = 3
       level = 1
       setCurrentLevel(world,level)
     elseif(world == 3 and level == 18)then
-      showStars("world 3 completed", "tap to continue", levelStars)
+      showStars("world 3 completed", _s("tap to continue"), levelStars)
       unlockAchievement("third-world")
       setStars(world, level, levelStars)
       world = 1
       level = 1
       setCurrentLevel(world,level)
   else
-  showStars("level "..level.." completed", "tap to continue", levelStars)
+  showStars("level "..level.." completed", _s("tap to continue"), levelStars)
   setCurrentLevel(world,level+1)
   unlockAchievement("first-level")
   if(stars==3)then
@@ -449,7 +453,7 @@ function gameOver()
       print("game over")
       sound("game-over")
       vibrate()
-      showMessage("game over","tap to retry")
+      showMessage("game over",_s("tap to retry"))
       sequence = 1
       countShow=1
       fillArray()
@@ -516,8 +520,8 @@ function saveCurrentTime()
 end
 
 function showSequence()
-      textLevel.text = "level "..level
-      textSequence.text = "seq "..sequence.."/"..level+3
+      textLevel.text = _s("level").." "..level
+      textSequence.text = _s("seq").." "..sequence.."/"..level+3
       TOUCH=false
       if(SAVE)then
         timer.performWithDelay(FREQ,saveCurrentTime())
@@ -705,7 +709,6 @@ rectangle11:addEventListener( "touch", rectangle11 )
 function scene:create( event )
     local sceneGroup = self.view
     print("create")
-    initScreenGame()
     sceneGroup:insert(rectangleBackground) 
     sceneGroup:insert(rectangle11)
     sceneGroup:insert(rectangle12)
@@ -743,7 +746,11 @@ function scene:show( event )
     end
 
     if ( event.phase == "did" ) then
-      
+      initScreenGame()
+      sequence=1
+      countCheck=1
+      countShow=1
+      showEmptySequence()
     end
 end
 
@@ -773,7 +780,7 @@ end
       end
       calculateTotalTime()
       fillArray()
-      showEmptySequence()
+      
       
 ----------------------------------------------------------------
 

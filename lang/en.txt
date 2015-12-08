@@ -1,0 +1,13 @@
+Hello = Hello
+Who Says? = Who Says?
+start = start
+continue = continue
+level = level
+levels = levels
+world = world
+sound = sound
+vibrate = vibrate
+ranking = ranking
+back = back
+select world = select world
+seq = seq

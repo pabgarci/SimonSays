@@ -3,6 +3,9 @@ local sceneName = "levels"
 local composer = require( "composer" )
 local sqlite3 = require( "sqlite3" )
 local widget = require( "widget" )
+local localization = require( "mod_localize" )
+
+local _s = localization.str
 
 local path = system.pathForFile( "data.db", system.DocumentsDirectory )
 local db = sqlite3.open( path )
@@ -34,7 +37,7 @@ function goBack()
  composer.gotoScene("worlds", optionsTransition)
 end
 
-local world = composer.getVariable("world")
+local world
 
 local function handleLevelSelect( event )
     if ( "ended" == event.phase ) then
@@ -49,7 +52,7 @@ end
 
 function scene:create( event )
     local sceneGroup = self.view
-background = display.newRect( contentWidth/2, contentHeight/2, contentWidth, height)
+        background = display.newRect( contentWidth/2, contentHeight/2, contentWidth, height)
        background:setFillColor(0.59,0.99,0.79)
        sceneGroup:insert(background)
 end
@@ -57,7 +60,7 @@ end
 function scene:show( event )
     local sceneGroup = self.view
     if ( event.phase == "will" ) then
-
+    world = composer.getVariable("world")
         local function getCurrentLevel(worldAux)
   local retCurrentLevel
     for row in db:nrows("SELECT * FROM data WHERE id="..worldAux) do
@@ -163,7 +166,7 @@ end
 
     buttonBackLevels = widget.newButton
         {
-          label = "back",
+          label = _s("back"),
           shape="roundedRect",
           width = contentWidth*0.9,
           height = textSize*0.9,
