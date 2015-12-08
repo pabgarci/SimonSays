@@ -45,6 +45,7 @@ local function handleLevelSelect( event )
         composer.setVariable("worldTarget",world)
         composer.setVariable("levelTarget",event.target.id)
         composer.setVariable("origin",1)
+        composer.removeScene("game")
         composer.gotoScene( "game", { effect = "fade", time = 200 } )
     
     end

@@ -559,10 +559,10 @@ end
 
 function click(worldAux, num)
   print("click")
+  deleteMessage()
   if(NEXTLEVEL==true)then
         NEXTLEVEL=false
         GAMEOVER = true
-        deleteMessage()
         timer.performWithDelay(FREQ/3,showSequence)
       else
        checkSequence(num)
@@ -671,8 +671,6 @@ local function loadLocalPlayerCallback( event )
    googlePlayGames=false
    print("-------------------------------------------------------------false")
  end
-
-   --saveSettings()  --save player data locally using your own "saveSettings()" function
 end
 
 local function gameNetworkLoginCallback( event )
