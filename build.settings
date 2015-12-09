@@ -93,8 +93,8 @@ plugins =
     
    ["CoronaProvider.gameNetwork.google"] =
    {
-     
       publisherId = "com.coronalabs",
+      supportedPlatforms = { android=true }
    },
 },
 }

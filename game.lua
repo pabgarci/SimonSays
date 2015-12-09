@@ -15,7 +15,7 @@ local db = sqlite3.open( path )
 
 local scene = composer.newScene()
 
-local FREQ = 1000
+local FREQ = 300
 local NEXTLEVEL = false
 local TOUCH = false
 local GAMEOVER = true
@@ -42,16 +42,26 @@ local textSizeTitle = contentWidth/7
 
 local arrayGame ={}
 local sequence = 1
-local time, totalTime, stars, level, world
+local time, totalTime, stars, level, world, valWin
+local justOnce=0
 local countShow=1
 local countCheck=1
 
 local starVertices, rectangleStars, showStar1, showStar2, showStar3
 
+function checkPlatform()
+    valWin = 0
+    if(system.getInfo("environment") == "device" and "Win"==system.getInfo("platformName"))then
+        valWin = contentHeight/30
+    end
+end
+
+checkPlatform()
+
 rectangleBackground = display.newRect( contentWidth/2, contentHeight/2, contentWidth, height)
 
-    rectangle11 = display.newRect( contentWidth/4, contentHeight/2, contentWidth/2, contentHeight)
-    rectangle12 = display.newRect( contentWidth*3/4, contentHeight/2, contentWidth/2, contentHeight)
+    rectangle11 = display.newRect( contentWidth/4, contentHeight/2, contentWidth/2, contentHeight-valWin*3.5)
+    rectangle12 = display.newRect( contentWidth*3/4, contentHeight/2, contentWidth/2, contentHeight-valWin*3.5)
     rectangle11.alpha = 0
     rectangle12.alpha = 0
 
@@ -104,7 +114,6 @@ rectangleBackground = display.newRect( contentWidth/2, contentHeight/2, contentW
     soundRectangle4 = audio.loadSound("sounds/rectangle_4.mp3")
     soundRectangle5 = audio.loadSound("sounds/rectangle_5.mp3")
     soundRectangle6 = audio.loadSound("sounds/rectangle_6.mp3")
-
     
 local function getSound()
   local boolSound
@@ -284,6 +293,7 @@ function calculateTotalTime()
 end
 
 function unlockAchievement(ach)
+  if("Android"==system.getInfo( "platformName" ))then
 local id
 if(ach=="first-level")then
   id = "CgkI-YvM6OkaEAIQAw"
@@ -306,7 +316,7 @@ gameNetwork.request( "unlockAchievement",
         listener = requestCallback
     }
 )
-
+end
 end
 
 function nextLevel()
@@ -528,12 +538,18 @@ function checkSequence(num)
         fillArray()
         countShow=1
         if(NEXTLEVEL==false)then
-          showEmptySequence()
+          startSequence()
         end
         
         print("level = "..level)
         print("sequence = "..sequence)
       end
+end
+
+function startSequence()
+  print("startSequence")
+  initScreenGame()
+  timerShowEmpty = timer.performWithDelay(FREQ*1.5,showSequence)
 end
 
 function showEmptySequence()
@@ -610,7 +626,7 @@ function click(worldAux, num)
   if(NEXTLEVEL==true)then
         NEXTLEVEL=false
         GAMEOVER = true
-        timer.performWithDelay(FREQ/3,showSequence)
+        timer.performWithDelay(FREQ/3,startSequence)
       else
        checkSequence(num)
        changeColor(num)
@@ -733,8 +749,6 @@ end
 local function gameNetworkSetup()
    if ( system.getInfo("platformName") == "Android" ) then
       gameNetwork.init( "google", gpgsInitCallback )
-   else
-      gameNetwork.init( "gamecenter", gameNetworkLoginCallback )
    end
 end
 
@@ -785,7 +799,7 @@ end
 function scene:show( event )
     local sceneGroup = self.view
     KEYSOUND=true
-    if ( event.phase == "will" ) then   
+    if ( event.phase == "will" ) then 
       gameNetworkSetup()
       SOUND = getSound()
       VIBRATE = getVibrate()
@@ -796,7 +810,12 @@ function scene:show( event )
       sequence=1
       countCheck=1
       countShow=1
-      showEmptySequence()
+      if(justOnce==0)then
+      startSequence()
+      justOnce=1
+      elseif(justOnce==1)then
+      justOnce=0
+      end
     end
 end
 

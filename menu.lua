@@ -217,11 +217,9 @@ local function gpgsInitCallback( event )
 end
 
 local function gameNetworkSetup()
-   if ( system.getInfo("platformName") == "Android" ) then
+  if("Android"==system.getInfo( "platformName" ))then
       gameNetwork.init( "google", gpgsInitCallback )
-   else
-      gameNetwork.init( "gamecenter", gameNetworkLoginCallback )
-   end
+ end
 end
 
 local function onSoundPress( event )
@@ -373,8 +371,6 @@ function scene:create( event )
         sceneGroup:insert(buttonStart)
         sceneGroup:insert(buttonLevels)
         sceneGroup:insert(buttonRanking)
-
-    
 end
 
 function scene:show( event )
@@ -406,17 +402,16 @@ function scene:show( event )
           function buttonRanking:touch ( event )
                 local phase = event.phase
                 if "ended" == phase then
+                if("Android"==system.getInfo( "platformName" ))then
                     gameNetwork.show( "achievements" )
                 end
+                end
           end
-            
+       
             gameNetworkSetup()
-
             buttonStart:addEventListener( "touch", buttonStart )
             buttonLevels:addEventListener( "touch", buttonLevels )
-            buttonRanking:addEventListener( "touch", buttonRanking )
-    
-        
+            buttonRanking:addEventListener( "touch", buttonRanking )   
     end 
 end
 
