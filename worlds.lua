@@ -6,7 +6,7 @@ local localization = require( "mod_localize" )
 
 local _s = localization.str
 
-local playerName, googlePlayGames
+local playerName, googlePlayGames, valWin
 
 local scene = composer.newScene( sceneName )
 
@@ -29,12 +29,22 @@ local optionsTransition = {
 
 ---------------------------------------------------------------------------------
 
+function checkPlatform()
+    valWin = 0
+    if(system.getInfo("environment") == "device" and "Win"==system.getInfo("platformName"))then
+        valWin = contentHeight/15
+    end
+end
+
 function goBack()
  composer.gotoScene("menu", optionsTransition)
 end
 
 function scene:create( event )
     local sceneGroup = self.view
+
+       checkPlatform()
+
        background = display.newRect( contentWidth/2, contentHeight/2, contentWidth, height)
        background:setFillColor(0.59,0.99,0.79)
        sceneGroup:insert(background)
@@ -55,7 +65,6 @@ function scene:create( event )
           labelColor = { default={ 1, 1, 1 }, over={ 0, 0, 0, 0.5 } },
           fillColor = { default={ 1, 0.4, 0.4}, over={ 1, 0.1, 0.7, 0.4 } },
         }
-
       
         buttonWorld2 = widget.newButton
         {
@@ -107,7 +116,7 @@ function scene:create( event )
         buttonWorld3.y = (height/10)*6.3
 
         buttonBack.x = display.contentCenterX
-        buttonBack.y = contentHeight + originY/2
+        buttonBack.y = contentHeight + originY/2 - valWin
 
         sceneGroup:insert(buttonWorld1)
         sceneGroup:insert(buttonWorld2)

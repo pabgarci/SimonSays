@@ -12,7 +12,7 @@ local db = sqlite3.open( path )
 
 local scene = composer.newScene()
 
-local maxLevels, buttonBack
+local maxLevels, buttonBack, valWin, world
 
 local background
 local contentWidth = display.contentWidth
@@ -33,36 +33,20 @@ local optionsTransition = {
 
 ---------------------------------------------------------------------
 
+function checkPlatform()
+    valWin = 0
+    if(system.getInfo("environment") == "device" and "Win"==system.getInfo("platformName"))then
+        valWin = contentHeight/15
+    end
+end
+
 function goBack()
  composer.gotoScene("worlds", optionsTransition)
 end
 
-local world
 
-local function handleLevelSelect( event )
-    if ( "ended" == event.phase ) then
-      
-        composer.setVariable("worldTarget",world)
-        composer.setVariable("levelTarget",event.target.id)
-        composer.setVariable("origin",1)
-        composer.removeScene("game")
-        composer.gotoScene( "game", { effect = "fade", time = 200 } )
-    
-    end
-end
 
-function scene:create( event )
-    local sceneGroup = self.view
-        background = display.newRect( contentWidth/2, contentHeight/2, contentWidth, height)
-       background:setFillColor(0.59,0.99,0.79)
-       sceneGroup:insert(background)
-end
-
-function scene:show( event )
-    local sceneGroup = self.view
-    if ( event.phase == "will" ) then
-    world = composer.getVariable("world")
-        local function getCurrentLevel(worldAux)
+local function getCurrentLevel(worldAux)
   local retCurrentLevel
     for row in db:nrows("SELECT * FROM data WHERE id="..worldAux) do
         retCurrentLevel=row.info
@@ -84,9 +68,34 @@ local function getStars(worldAux, levelAux)
   return retStars
 end
 
+local function handleLevelSelect( event )
+    if ( "ended" == event.phase ) then
+      
+        composer.setVariable("worldTarget",world)
+        composer.setVariable("levelTarget",event.target.id)
+        composer.setVariable("origin",1)
+        composer.removeScene("game")
+        composer.gotoScene( "game", { effect = "fade", time = 200 } )
+    
+    end
+end
+
+function scene:create( event )
+    local sceneGroup = self.view
+        
+        background = display.newRect( contentWidth/2, contentHeight/2, contentWidth, height)
+        background:setFillColor(0.59,0.99,0.79)
+        sceneGroup:insert(background)
+end
+
+function scene:show( event )
+    local sceneGroup = self.view
+    if ( event.phase == "will" ) then
+    world = composer.getVariable("world")
+    checkPlatform()
     local levelSelectGroup = widget.newScrollView({
         width = contentWidth,
-        height = contentHeight+originY,
+        height = contentHeight+originY-valWin,
 
         scrollWidth = contentWidth,
         scrollHeight = contentHeight+originY/2,
@@ -96,7 +105,7 @@ end
     })
   
     local xOffset = contentWidth*3/14
-    local yOffset = -originY*2
+    local yOffset = -originY*2 + valWin*2
     local cellCount = 1
     local buttons = {}
 
@@ -179,7 +188,7 @@ end
         }
 
         buttonBackLevels.x = display.contentCenterX
-        buttonBackLevels.y = contentHeight + originY/2
+        buttonBackLevels.y = contentHeight + originY/2 - valWin
         sceneGroup:insert(buttonBackLevels)
 
     elseif ( event.phase == "did" ) then
