@@ -26,159 +26,154 @@ local optionsTransition = {
       time = 200
     }
 
-
 ---------------------------------------------------------------------------------
 
 function checkPlatform()
-    valWin = 0
-    if(system.getInfo("environment") == "device" and "Win"==system.getInfo("platformName"))then
-        valWin = contentHeight/15
-    end
+  valWin = 0
+  if(system.getInfo("environment") == "device" and "Win"==system.getInfo("platformName"))then
+    valWin = contentHeight/15
+  end
 end
 
 function goBack()
- composer.gotoScene("menu", optionsTransition)
+  composer.gotoScene("menu", optionsTransition)
 end
 
 function scene:create( event )
-    local sceneGroup = self.view
+  local sceneGroup = self.view
 
-       checkPlatform()
+  checkPlatform()
 
-       background = display.newRect( contentWidth/2, contentHeight/2, contentWidth, height)
-       background:setFillColor(0.59,0.99,0.79)
-       sceneGroup:insert(background)
+  background = display.newRect( contentWidth/2, contentHeight/2, contentWidth, height)
+  background:setFillColor(0.59,0.99,0.79)
+  sceneGroup:insert(background)
 
-       textTitle = display.newText (_s("select world"),contentWidth/2, (height/10)*1, native.systemFontBold, textSizeTitle)
-       textTitle:setFillColor( 1, 0.4, 0.4 )
-       sceneGroup:insert(textTitle)
+  textTitle = display.newText (_s("select world"),contentWidth/2, (height/10)*1, native.systemFontBold, textSizeTitle)
+  textTitle:setFillColor( 1, 0.4, 0.4 )
+  sceneGroup:insert(textTitle)
 
-       buttonWorld1 = widget.newButton
-        {
-          label = _s("world").." 1",
-          emboss = false,
-          shape="roundedRect",
-          width = contentWidth*0.9,
-          height = textSize*1.3,
-          font = native.systemFontBold,
-          fontSize = textSize,
-          labelColor = { default={ 1, 1, 1 }, over={ 0, 0, 0, 0.5 } },
-          fillColor = { default={ 1, 0.4, 0.4}, over={ 1, 0.1, 0.7, 0.4 } },
-        }
+  buttonWorld1 = widget.newButton
+    {
+      label = _s("world").." 1",
+      emboss = false,
+      shape="roundedRect",
+      width = contentWidth*0.9,
+      height = textSize*1.3,
+      font = native.systemFontBold,
+      fontSize = textSize,
+      labelColor = { default={ 1, 1, 1 }, over={ 0, 0, 0, 0.5 } },
+      fillColor = { default={ 1, 0.4, 0.4}, over={ 1, 0.1, 0.7, 0.4 } },
+    }
       
-        buttonWorld2 = widget.newButton
-        {
-          label = _s("world").." 2",
-          emboss = false,
-          shape="roundedRect",
-          width = contentWidth*0.9,
-          height = textSize*1.3,
-          font = native.systemFontBold,
-          fontSize = textSize,
-          labelColor = { default={ 1, 1, 1 }, over={ 0, 0, 0, 0.5 }},
-          fillColor = { default={ 1, 0.4, 0.4}, over={ 1, 0.1, 0.7, 0.4 }},
-        }
+  buttonWorld2 = widget.newButton
+    {
+      label = _s("world").." 2",
+      emboss = false,
+      shape="roundedRect",
+      width = contentWidth*0.9,
+      height = textSize*1.3,
+      font = native.systemFontBold,
+      fontSize = textSize,
+      labelColor = { default={ 1, 1, 1 }, over={ 0, 0, 0, 0.5 }},
+      fillColor = { default={ 1, 0.4, 0.4}, over={ 1, 0.1, 0.7, 0.4 }},
+    }
 
-        buttonWorld3 = widget.newButton
-        {
-          label = _s("world").." 3",
-          emboss = false,
-          shape="roundedRect",
-          width = contentWidth*0.9,
-          height = textSize*1.3,
-          font = native.systemFontBold,
-          fontSize = textSize,
-          labelColor = { default={ 1, 1, 1 }, over={ 0, 0, 0, 0.5 }},
-          fillColor = { default={ 1, 0.4, 0.4}, over={ 1, 0.1, 0.7, 0.4 }},
-        }
+  buttonWorld3 = widget.newButton
+    {
+      label = _s("world").." 3",
+      emboss = false,
+      shape="roundedRect",
+      width = contentWidth*0.9,
+      height = textSize*1.3,
+      font = native.systemFontBold,
+      fontSize = textSize,
+      labelColor = { default={ 1, 1, 1 }, over={ 0, 0, 0, 0.5 }},
+      fillColor = { default={ 1, 0.4, 0.4}, over={ 1, 0.1, 0.7, 0.4 }},
+    }
 
-       buttonBack = widget.newButton
-        {
-          label = _s("back"),
-          emboss = false,
-          shape="roundedRect",
-          width = contentWidth*0.9,
-          height = textSize*0.9,
-          font = native.systemFontBold,
-          fontSize = textSize*0.7,
-          labelColor = { default={ 1, 1, 1 }, over={ 0, 0, 0, 0.5 }},
-          fillColor = { default={ 1, 0.4, 0.4}, over={ 1, 0.1, 0.7, 0.4 }},
-          onRelease = goBack
-        }
+  buttonBack = widget.newButton
+    {
+      label = _s("back"),
+      emboss = false,
+      shape="roundedRect",
+      width = contentWidth*0.9,
+      height = textSize*0.9,
+      font = native.systemFontBold,
+      fontSize = textSize*0.7,
+      labelColor = { default={ 1, 1, 1 }, over={ 0, 0, 0, 0.5 }},
+      fillColor = { default={ 1, 0.4, 0.4}, over={ 1, 0.1, 0.7, 0.4 }},
+      onRelease = goBack
+    }
 
-        buttonWorld1.x = display.contentCenterX
-        buttonWorld1.y = (height/10)*3.7
+  buttonWorld1.x = display.contentCenterX
+  buttonWorld1.y = (height/10)*3.7
 
-        buttonWorld2.x = display.contentCenterX
-        buttonWorld2.y = (height/10)*5
+  buttonWorld2.x = display.contentCenterX
+  buttonWorld2.y = (height/10)*5
 
-        buttonWorld3.x = display.contentCenterX
-        buttonWorld3.y = (height/10)*6.3
+  buttonWorld3.x = display.contentCenterX
+  buttonWorld3.y = (height/10)*6.3
 
-        buttonBack.x = display.contentCenterX
-        buttonBack.y = contentHeight + originY/2 - valWin
+  buttonBack.x = display.contentCenterX
+  buttonBack.y = contentHeight + originY/2 - valWin
 
-        sceneGroup:insert(buttonWorld1)
-        sceneGroup:insert(buttonWorld2)
-        sceneGroup:insert(buttonWorld3)
-        sceneGroup:insert( buttonBack )
+  sceneGroup:insert(buttonWorld1)
+  sceneGroup:insert(buttonWorld2)
+  sceneGroup:insert(buttonWorld3)
+  sceneGroup:insert( buttonBack )
 end
 
 function scene:show( event )
-    local sceneGroup = self.view
-    local phase = event.phase
+  local sceneGroup = self.view
+  local phase = event.phase
 
-    if phase == "will" then
+  if phase == "will" then
        
-    elseif phase == "did" then
-
-          function buttonWorld1:touch ( event )
-                local phase = event.phase
-                if "ended" == phase then
-                    composer.setVariable("worldC",1)
-                    composer.gotoScene( "levels", optionsTransition )
-                end
-          end
+  elseif phase == "did" then
+    function buttonWorld1:touch ( event )
+      local phase = event.phase
+      if "ended" == phase then
+        composer.setVariable("worldC",1)
+        composer.gotoScene( "levels", optionsTransition )
+      end
+    end
                  
-          function buttonWorld2:touch ( event )
-                local phase = event.phase
-                if "ended" == phase then
-                    composer.setVariable("worldC",2)
-                    composer.gotoScene( "levels", optionsTransition )
-                end
-          end
+    function buttonWorld2:touch ( event )
+      local phase = event.phase
+      if "ended" == phase then
+        composer.setVariable("worldC",2)
+        composer.gotoScene( "levels", optionsTransition )
+      end
+    end
            
-          function buttonWorld3:touch ( event )
-                local phase = event.phase
-                if "ended" == phase then
-                    composer.setVariable("worldC",3)
-                    composer.gotoScene( "levels", optionsTransition )
-                end
-          end
-          buttonWorld1:addEventListener( "touch", buttonWorld1 )
-          buttonWorld2:addEventListener( "touch", buttonWorld2 )
-          buttonWorld3:addEventListener( "touch", buttonWorld3 )
+    function buttonWorld3:touch ( event )
+      local phase = event.phase
+      if "ended" == phase then
+        composer.setVariable("worldC",3)
+        composer.gotoScene( "levels", optionsTransition )
+      end
+    end
+    buttonWorld1:addEventListener( "touch", buttonWorld1 )
+    buttonWorld2:addEventListener( "touch", buttonWorld2 )
+    buttonWorld3:addEventListener( "touch", buttonWorld3 )
     end 
 end
 
 
 
 function scene:hide( event )
-    local sceneGroup = self.view
-    local phase = event.phase
-
-    if event.phase == "will" then
+  local sceneGroup = self.view
+  local phase = event.phase
+  if event.phase == "will" then
         
-    elseif phase == "did" then
-       
-  
-    end 
+  elseif phase == "did" then
+      
+  end 
 end
 
 
 function scene:destroy( event )
     local sceneGroup = self.view
-
 end
 
 scene:addEventListener( "create", scene )

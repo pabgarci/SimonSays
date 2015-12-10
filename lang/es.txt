@@ -10,6 +10,7 @@ vibrate = vibración
 achievements = logros
 back = atrás
 select world = mundos
+completed = completado
 tap to continue = pulsa para continuar
 tap to retry = pulsa para reintentar
 seq = seq

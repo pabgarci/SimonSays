@@ -144,7 +144,7 @@ rectangleBackground = display.newRect( contentWidth/2, contentHeight/2, contentW
     starVertices = { 0,-8,1.763,-2.427,7.608,-2.472,2.853,0.927,4.702,6.472,0.0,3.0,-4.702,6.472,-2.853,0.927,-7.608,-2.472,-1.763,-2.427 }
 
     rectangleStars = display.newRect( contentWidth/2, contentHeight/2, contentWidth, height*2.5/10)
-    textStars1 = display.newText ("", contentWidth/2, (height/12)*4.55+valWin*2, native.systemFontBold, textSizeTitle*0.75)
+    textStars1 = display.newText ("", contentWidth/2, (height/12)*4.55+valWin*2, native.systemFontBold, textSizeTitle*0.6)
     textStars2 = display.newText ("", contentWidth/2, (height/12)*6+valWin*2, native.systemFontBold, textSize*0.5)
 
     showStar1 = display.newPolygon( 0, (height/12)*5.4+valWin*2, starVertices )
@@ -229,9 +229,6 @@ function setCurrentLevel(worldAux, levelAux)
   db:exec( insertQuery )
   local updateQuery = "UPDATE data SET info="..levelAux.." WHERE id="..worldAux..";"
   db:exec( updateQuery )
-  print("levelAux"..levelAux)
-  print("worldAux"..worldAux)
-  print("levelAuxR"..getCurrentLevel(worldAux))
 end
 
 
@@ -289,7 +286,6 @@ end
 
 function playSound(ach)
   if(SOUND==true)then
-    print("ESTA SONANDO")
   if(ach=="next-level")then
   audio.play(soundNextLevel, {channel=2})
   elseif(ach=="game-over")then
@@ -344,9 +340,8 @@ function rec (n)
   for i=1,n do
     aux=aux+n
   end
-  print("AUX: "..aux)
-        return aux
-    end
+  return aux
+end
 
 function calculateTotalTime()
   local recResult = rec(level +3)
@@ -382,13 +377,10 @@ end
 end
 
 function nextLevel()
-  print("nextLevel")
   local levelStars = calculateStars()
   initScreenGame()
   NEXTLEVEL=true
   TOUCH = true
-  print("HOLAA world " .. world)
-  print("HOLAA level " .. level)
   if(world == 1 and level == 6)then
     showStars(_s("world").." 1 ".._s("completed"), _s("tap to continue"), levelStars)
     unlockAchievement("first-world")
@@ -398,7 +390,7 @@ function nextLevel()
     setCurrentLevel(world,level)
     sequence=4
     elseif(world == 2 and level == 12)then
-      showStars("world 2 completed", _s("tap to continue"), levelStars)
+      showStars(_s("world").." 2 ".._s("completed"), _s("tap to continue"), levelStars)
       unlockAchievement("second-world")
       setStars(world, level, levelStars)
       world = 3
@@ -406,7 +398,7 @@ function nextLevel()
       setCurrentLevel(world,level)
     elseif(world == 3 and level == 18)then
       sequence=4
-      showStars("world 3 completed", _s("tap to continue"), levelStars)
+      showStars(_s("world").." 3 ".._s("completed"), _s("tap to continue"), levelStars)
       unlockAchievement("third-world")
       setStars(world, level, levelStars)
       ENDGAME=true
@@ -415,14 +407,13 @@ function nextLevel()
       level = 1
       setCurrentLevel(world,level)
     else
-      showStars("level "..level.." completed", _s("tap to continue"), levelStars)
+      showStars(_s("level").." "..level.._s("completed"), _s("tap to continue"), levelStars)
       setCurrentLevel(world,level+1)
       unlockAchievement("first-level")
       if(stars==3)then
         unlockAchievement("three-stars")
       end
       setStars(world, level, levelStars)
-      print("STARS = "..levelStars)
       level = level + 1
     end
   sequence = 1
@@ -448,8 +439,6 @@ function checkLevel(worldAux, levelAux)
     world = worldAux
     level = levelAux
   end
-  print("CHECKLEVEL2 Level: "..level)
-  print("CHECKLEVEL2 Level: "..level)
 end
 
 function changeColor(color)
@@ -500,12 +489,10 @@ function changeColor(color)
 end
 
 function fillArray()
-  print("fillArray")
     arrayGame[countCheck] = math.random (world*2)
 end
 
 function initScreenGame()
-      print("initScreenGame")
       if(valWin==0)then
         buttonBack.alpha=0
       else
@@ -586,7 +573,6 @@ function initScreenGame()
 end
 
 function gameOver()
-      print("game over")
       playSound("game-over")
       vibrate()
       showMessage("game over",_s("tap to retry"))
@@ -599,39 +585,33 @@ function gameOver()
 end
 
 function checkSequence(num)
-  print("checkSequence")
-      if(num==arrayGame[countCheck])then
-        countCheck=countCheck+1
-      else
-        gameOver()
-      end
+  if(num==arrayGame[countCheck])then
+      countCheck=countCheck+1
+    else
+      gameOver()
+  end
       
-      if (countCheck>sequence and GAMEOVER)then  -- seq passed
-        sequence = sequence +1
-        print(FREQ)
-        TOUCH = false
-        if(sequence==(level+4))then
-        nextLevel()
-        end
-        fillArray()
-        countShow=1
-        if(NEXTLEVEL==false)then
-          startSequence()
-        end
-        
-        print("level = "..level)
-        print("sequence = "..sequence)
-      end
+  if (countCheck>sequence and GAMEOVER)then  -- seq passed
+    sequence = sequence +1
+    print(FREQ)
+    TOUCH = false
+    if(sequence==(level+4))then
+      nextLevel()
+    end
+      fillArray()
+      countShow=1
+    if(NEXTLEVEL==false)then
+      startSequence()
+    end
+  end
 end
 
 function startSequence()
-  print("startSequence")
   initScreenGame()
   timerShowEmpty = timer.performWithDelay(FREQ,showSequence)
 end
 
 function showEmptySequence()
-  print("showEmptySequence")
   initScreenGame()
   timerShowEmpty = timer.performWithDelay(FREQ/2,showSequence)
 end
@@ -645,11 +625,11 @@ function calculateStars()
   print("TIME = "..time)
   print("USED TIME = "..usedTime)
   if(usedTime<totalTime*0.6)then
-      currentStars = 3
-      elseif(usedTime<totalTime)then
-        currentStars = 2
-        elseif(usedTime>=totalTime)then
-          currentStars = 1
+    currentStars = 3
+    elseif(usedTime<totalTime)then
+      currentStars = 2
+      elseif(usedTime>=totalTime)then
+        currentStars = 1
   end
   calculateTotalTime()
   return currentStars
@@ -661,28 +641,27 @@ function saveCurrentTime()
 end
 
 function showSequence()
-      textLevel.text = _s("level").." "..level
-      textSequence.text = _s("seq").." "..sequence.."/"..level+3
-      TOUCH=false
-      if(SAVE)then
-        timerShow = timer.performWithDelay(FREQ,saveCurrentTime())
-        SAVE=false
-      end
-      print("showSequence")
+  textLevel.text = _s("level").." "..level
+  textSequence.text = _s("seq").." "..sequence.."/"..level+3
+  TOUCH=false
+  if(SAVE)then
+    timerShow = timer.performWithDelay(FREQ,saveCurrentTime())
+    SAVE=false
+  end
       
-      if(countShow<=sequence)then
-       changeColor(arrayGame[countShow])        
-      end
+  if(countShow<=sequence)then
+    changeColor(arrayGame[countShow])   
+    print("Show sequence "..countShow..": "..arrayGame[countShow])     
+  end
 
-      countShow=countShow+1
+  countShow=countShow+1
 
-      if(countShow<=sequence)then
-        timerShow = timer.performWithDelay(FREQ,showEmptySequence)
-      else
-        print("limpio")
-         timer.performWithDelay(FREQ,initScreenGame)
-        TOUCH = true
-      end
+  if(countShow<=sequence)then
+    timerShow = timer.performWithDelay(FREQ,showEmptySequence)
+    else
+      timer.performWithDelay(FREQ,initScreenGame)
+      TOUCH = true
+  end
   countCheck=1
 end
 
@@ -702,121 +681,113 @@ function click(worldAux, num)
   print("click")
   deleteMessage()
   if(NEXTLEVEL==true)then
-        NEXTLEVEL=false
-        GAMEOVER = true
-        timer.performWithDelay(FREQ/3,startSequence)
-        elseif(ENDGAME==true)then
-          showMessage("congratulations! you have finished the game =)")
-          timer.performWithDelay(5000,goBack)
-  else
-       checkSequence(num)
-       changeColor(num)
-       timer.performWithDelay(FREQ/10,initScreenGame)
-
+    NEXTLEVEL=false
+    GAMEOVER = true
+    timer.performWithDelay(FREQ/3,startSequence)
+    elseif(ENDGAME==true)then
+      showMessage("congratulations! you have finished the game =)")
+      timer.performWithDelay(5000,goBack)
+      else
+        checkSequence(num)
+        changeColor(num)
+        timer.performWithDelay(FREQ/10,initScreenGame)
   end
-
 end
 
 function rectangle11:touch( event )
-             if event.phase == "ended" and TOUCH  then
-                click (1,1)
-                return true
-              end
-        end
+  if event.phase == "ended" and TOUCH  then
+    click (1,1)
+    return true
+  end
+end
 
-        function rectangle12:touch( event )
-             if event.phase == "ended"  and TOUCH then
-              click(1,2)
-                return true
-              end
-        end
+function rectangle12:touch( event )
+  if event.phase == "ended"  and TOUCH then
+    click(1,2)
+    return true
+  end
+end
 
-        function rectangle21:touch( event )
-              if event.phase == "ended" and TOUCH then
-                click(2,1)
-                 return true
-             end
+function rectangle21:touch( event )
+  if event.phase == "ended" and TOUCH then
+    click(2,1)
+    return true
+  end
+end
 
-        end
+function rectangle22:touch( event )
+  if event.phase == "ended"  and TOUCH then
+    click(2,2)
+    return true
+  end
+end
 
-        function rectangle22:touch( event )
-              if event.phase == "ended"  and TOUCH then
-                click(2,2)
-                return true
-              end
-        end
+function rectangle23:touch( event )
+  if event.phase == "ended" and TOUCH  then
+    click(2,3)
+    return true
+  end
+end
 
-        function rectangle23:touch( event )
+function rectangle24:touch( event )
+  if event.phase == "ended"  and TOUCH then
+    click(2,4)
+    return true
+  end
+end
 
-             if event.phase == "ended" and TOUCH  then
-              click(2,3)
-                return true
-              end
+function rectangle31:touch( event )
+  if event.phase == "ended" and TOUCH then
+    click(3,1)
+    return true
+  end
+end
 
-        end
+function rectangle32:touch( event )
+  if event.phase == "ended"  and TOUCH then
+    click(3,2)
+    return true
+  end
+end
 
-        function rectangle24:touch( event )
-             if event.phase == "ended"  and TOUCH then
-              click(2,4)
-                return true
-              end
-        end
+function rectangle33:touch( event )
+  if event.phase == "ended" and TOUCH  then
+    click(3,3)
+    return true
+  end
+end
 
-        function rectangle31:touch( event )
-              if event.phase == "ended" and TOUCH then
-                click(3,1)
-                 return true
-             end
+function rectangle34:touch( event )
+  if event.phase == "ended"  and TOUCH then
+    click(3,4)
+    return true
+  end
+end
 
-        end
+function rectangle35:touch( event )
+  if event.phase == "ended" and TOUCH then
+    click(3,5)
+    return true
+  end
+end
 
-        function rectangle32:touch( event )
-              if event.phase == "ended"  and TOUCH then
-                 click(3,2)
-                return true
-              end
-        end
-
-        function rectangle33:touch( event )
-             if event.phase == "ended" and TOUCH  then
-               click(3,3)
-                return true
-              end
-
-        end
-
-        function rectangle34:touch( event )
-             if event.phase == "ended"  and TOUCH then
-               click(3,4)
-                return true
-              end
-        end
-
-        function rectangle35:touch( event )
-              if event.phase == "ended" and TOUCH then
-                 click(3,5)
-                 return true
-             end
-
-        end
-
-        function rectangle36:touch( event )
-              if event.phase == "ended"  and TOUCH then
-                 click(3,6)
-                return true
-              end
-        end
+function rectangle36:touch( event )
+  if event.phase == "ended"  and TOUCH then
+    click(3,6)
+    return true
+  end
+end
 
 local function loadLocalPlayerCallback( event )
-   playerName = event.data.alias
+  playerName = event.data.alias
   print("-------------------------------------------"..playerName)
   if(event.data.isError==false)then
     googlePlayGames=true
     print("-------------------------------------------------------------true")
-   else
-   googlePlayGames=false
-   print("-------------------------------------------------------------false")
- end
+    else
+      googlePlayGames=false
+      print("-------------------------------------------------------------false")
+  end
 end
 
 local function gameNetworkLoginCallback( event )
@@ -830,110 +801,101 @@ local function gpgsInitCallback( event )
 end
 
 local function gameNetworkSetup()
-   if ( system.getInfo("platformName") == "Android" ) then
-      gameNetwork.init( "google", gpgsInitCallback )
-   end
+  if ( system.getInfo("platformName") == "Android" ) then
+    gameNetwork.init( "google", gpgsInitCallback )
+  end
 end
 
-        rectangle11:addEventListener( "touch", rectangle11 )
-        rectangle12:addEventListener( "touch", rectangle12 )
-        rectangle21:addEventListener( "touch", rectangle21 )
-        rectangle22:addEventListener( "touch", rectangle22 )
-        rectangle23:addEventListener( "touch", rectangle23 )
-        rectangle24:addEventListener( "touch", rectangle24 )
-        rectangle31:addEventListener( "touch", rectangle31 )
-        rectangle32:addEventListener( "touch", rectangle32 )
-        rectangle33:addEventListener( "touch", rectangle33 )
-        rectangle34:addEventListener( "touch", rectangle34 )
-        rectangle35:addEventListener( "touch", rectangle35 )
-        rectangle36:addEventListener( "touch", rectangle36 )
+  rectangle11:addEventListener( "touch", rectangle11 )
+  rectangle12:addEventListener( "touch", rectangle12 )
+  rectangle21:addEventListener( "touch", rectangle21 )
+  rectangle22:addEventListener( "touch", rectangle22 )
+  rectangle23:addEventListener( "touch", rectangle23 )
+  rectangle24:addEventListener( "touch", rectangle24 )
+  rectangle31:addEventListener( "touch", rectangle31 )
+  rectangle32:addEventListener( "touch", rectangle32 )
+  rectangle33:addEventListener( "touch", rectangle33 )
+  rectangle34:addEventListener( "touch", rectangle34 )
+  rectangle35:addEventListener( "touch", rectangle35 )
+  rectangle36:addEventListener( "touch", rectangle36 )
 
 function scene:create( event )
-    local sceneGroup = self.view
-    print("create")
-    sceneGroup:insert(rectangleBackground) 
-    sceneGroup:insert(rectangle11)
-    sceneGroup:insert(rectangle12)
+  local sceneGroup = self.view
+  print("create")
+  sceneGroup:insert(rectangleBackground) 
+  sceneGroup:insert(rectangle11)
+  sceneGroup:insert(rectangle12)
 
-    sceneGroup:insert(rectangle21)
-    sceneGroup:insert(rectangle22)
-    sceneGroup:insert(rectangle23)
-    sceneGroup:insert(rectangle24)
+  sceneGroup:insert(rectangle21)
+  sceneGroup:insert(rectangle22)
+  sceneGroup:insert(rectangle23)
+  sceneGroup:insert(rectangle24)
 
-    sceneGroup:insert(rectangle31)
-    sceneGroup:insert(rectangle32)
-    sceneGroup:insert(rectangle33)
-    sceneGroup:insert(rectangle34)
-    sceneGroup:insert(rectangle35)
-    sceneGroup:insert(rectangle36)
+  sceneGroup:insert(rectangle31)
+  sceneGroup:insert(rectangle32)
+  sceneGroup:insert(rectangle33)
+  sceneGroup:insert(rectangle34)
+  sceneGroup:insert(rectangle35)
+  sceneGroup:insert(rectangle36)
 
-    sceneGroup:insert(textLevel)
-    sceneGroup:insert(textSequence)
+  sceneGroup:insert(textLevel)
+  sceneGroup:insert(textSequence)
 
-    sceneGroup:insert(rectangleMessage) 
-    sceneGroup:insert(textMessage1) 
-    sceneGroup:insert(textMessage2) 
-    sceneGroup:insert(rectangleStars) 
-    sceneGroup:insert(textStars1) 
-    sceneGroup:insert(textStars2) 
-    sceneGroup:insert(buttonBack)
+  sceneGroup:insert(rectangleMessage) 
+  sceneGroup:insert(textMessage1) 
+  sceneGroup:insert(textMessage2) 
+  sceneGroup:insert(rectangleStars) 
+  sceneGroup:insert(textStars1) 
+  sceneGroup:insert(textStars2) 
+  sceneGroup:insert(buttonBack)
 end
 
--- On scene show...
 function scene:show( event )
-    local sceneGroup = self.view
-    KEYSOUND=true
-    if ( event.phase == "will" ) then 
-      gameNetworkSetup()
-      SOUND = getSound()
-      VIBRATE = getVibrate()
-    end
+  local sceneGroup = self.view
+  KEYSOUND=true
+  if ( event.phase == "will" ) then 
+    gameNetworkSetup()
+    SOUND = getSound()
+    VIBRATE = getVibrate()
+  end
 
-    if ( event.phase == "did" ) then
-      initScreenGame()
-      sequence=1
-      countCheck=1
-      countShow=1
-      if(justOnce==0)then
+  if ( event.phase == "did" ) then
+    initScreenGame()
+    sequence=1
+    countCheck=1
+    countShow=1
+    if(justOnce==0)then
       startSequence()
       justOnce=1
       elseif(justOnce==1)then
-      justOnce=0
-      end
+        justOnce=0
     end
+  end
 end
 
 function scene:hide( event )
-   --stopSound()
     audio.stop()
     SOUND=false
-   --KEYSOUND=false
-end
-
-function scene:destroy( event )
-    local sceneGroup = self.view   
 end
 
 ----------------------------  GAME ------------------------------
-      deleteMessage()
-      SOUND = getSound()
-      VIBRATE = getVibrate()
-      print("SOUND GAME:")
-      print (SOUND)
-      if(composer.getVariable("origin")==1)then
-      world = composer.getVariable("worldTarget")
-      level = composer.getVariable("levelTarget")
-      else
+  deleteMessage()
+  SOUND = getSound()
+  VIBRATE = getVibrate()
+  print("SOUND GAME:")
+  print (SOUND)
+  if(composer.getVariable("origin")==1)then
+    world = composer.getVariable("worldTarget")
+    level = composer.getVariable("levelTarget")
+    else
       checkLevel()
-      end
-      calculateFrequency()
-      calculateTotalTime()
-      fillArray()
+  end
+  calculateFrequency()
+  calculateTotalTime()
+  fillArray()
 ----------------------------------------------------------------
 
--- Composer scene listeners
 scene:addEventListener( "create", scene )
 scene:addEventListener( "show", scene )
 scene:addEventListener( "hide", scene )
-scene:addEventListener( "destroy", scene )
 return scene

@@ -9,5 +9,7 @@ sound = sound
 vibrate = vibrate
 achievements = achievements
 back = back
+completed = completed
+tap to continue = tap to continue
 select world = select world
 seq = seq
