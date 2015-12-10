@@ -97,7 +97,14 @@ settings =
 
 plugins =
 {
- 
+ 	plugins =
+    {
+        ["facebook"] =
+        {
+            publisherId = "com.coronalabs"
+        },
+    },
+    
    ["CoronaProvider.gameNetwork.google"] =
    {
       publisherId = "com.coronalabs",
