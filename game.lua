@@ -21,6 +21,7 @@ local TOUCH = false
 local GAMEOVER = true
 local SAVE = true
 local KEYSOUND = true
+local ENDGAME = false
 local SOUND, VIBRATE, soundNextLevel, soundGameOver, starsTimer
 local timerShow, timerShowEmpty
 local soundRectangle1, soundRectangle2, soundRectangle3, soundRectangle4, soundRectangle5, soundRectangle6
@@ -232,9 +233,7 @@ function setCurrentLevel(worldAux, levelAux)
   print("worldAux"..worldAux)
   print("levelAuxR"..getCurrentLevel(worldAux))
 end
- setCurrentLevel(1,6)
-  setCurrentLevel(2,12)
-   setCurrentLevel(3,18)
+
 
 local function getStars(worldAux, levelAux)
   local retStars
@@ -388,6 +387,8 @@ function nextLevel()
   initScreenGame()
   NEXTLEVEL=true
   TOUCH = true
+  print("HOLAA world " .. world)
+  print("HOLAA level " .. level)
   if(world == 1 and level == 6)then
     showStars(_s("world").." 1 ".._s("completed"), _s("tap to continue"), levelStars)
     unlockAchievement("first-world")
@@ -395,6 +396,7 @@ function nextLevel()
     world = 2
     level = 1
     setCurrentLevel(world,level)
+    sequence=4
     elseif(world == 2 and level == 12)then
       showStars("world 2 completed", _s("tap to continue"), levelStars)
       unlockAchievement("second-world")
@@ -403,9 +405,12 @@ function nextLevel()
       level = 1
       setCurrentLevel(world,level)
     elseif(world == 3 and level == 18)then
+      sequence=4
       showStars("world 3 completed", _s("tap to continue"), levelStars)
       unlockAchievement("third-world")
       setStars(world, level, levelStars)
+      ENDGAME=true
+      NEXTLEVEL=false
       world = 1
       level = 1
       setCurrentLevel(world,level)
@@ -601,7 +606,6 @@ function checkSequence(num)
       
       if (countCheck>sequence and GAMEOVER)then  -- seq passed
         sequence = sequence +1
-        --FREQ = FREQ-((world*100+400)/(level+3))
         print(FREQ)
         TOUCH = false
         if(sequence==(level+4))then
@@ -699,11 +703,16 @@ function click(worldAux, num)
         NEXTLEVEL=false
         GAMEOVER = true
         timer.performWithDelay(FREQ/3,startSequence)
-      else
+        elseif(ENDGAME==true)then
+          showMessage("congratulations! you have finished the game =)")
+          timer.performWithDelay(5000,goBack)
+  else
        checkSequence(num)
        changeColor(num)
        timer.performWithDelay(FREQ/10,initScreenGame)
-      end
+
+  end
+
 end
 
 function rectangle11:touch( event )
