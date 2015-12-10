@@ -15,7 +15,7 @@ local db = sqlite3.open( path )
 
 local scene = composer.newScene()
 
-local FREQ = 300
+local FREQ = 800
 local NEXTLEVEL = false
 local TOUCH = false
 local GAMEOVER = true
@@ -39,15 +39,31 @@ local height = contentHeight-originY*2
 
 local textSize = contentWidth/8
 local textSizeTitle = contentWidth/7
+local rounded = contentWidth/40
 
 local arrayGame ={}
 local sequence = 1
-local time, totalTime, stars, level, world, valWin
+local time, totalTime, stars, level, world, valWin, buttonBack
 local justOnce=0
 local countShow=1
 local countCheck=1
 
 local starVertices, rectangleStars, showStar1, showStar2, showStar3
+
+local optionsTransition = {
+      effect = "zoomInOutFade",
+      time = 200
+    }
+
+local gradient1 = {
+    type="gradient",
+    color1={ 1,1,0.78 }, color2={ 1,0.95,0.46 }, direction="left"
+}
+
+local gradient2 = {
+    type="gradient",
+    color1={ 1,0.88,0.88 }, color2={ 0.96, 0.56, 0.69 }, direction="right"
+}
 
 function checkPlatform()
     valWin = 0
@@ -56,30 +72,34 @@ function checkPlatform()
     end
 end
 
+function goBack()
+ composer.gotoScene("menu", optionsTransition)
+end
+
 checkPlatform()
 
 rectangleBackground = display.newRect( contentWidth/2, contentHeight/2, contentWidth, height)
 
-    rectangle11 = display.newRect( contentWidth/4, contentHeight/2, contentWidth/2, contentHeight-valWin*3.5)
-    rectangle12 = display.newRect( contentWidth*3/4, contentHeight/2, contentWidth/2, contentHeight-valWin*3.5)
+    rectangle11 = display.newRoundedRect( contentWidth/4, contentHeight/2, contentWidth/2, contentHeight-valWin*3.5, rounded)
+    rectangle12 = display.newRoundedRect( contentWidth*3/4, contentHeight/2, contentWidth/2, contentHeight-valWin*3.5, rounded)
     rectangle11.alpha = 0
     rectangle12.alpha = 0
 
-    rectangle21 = display.newRect( contentWidth/4, contentHeight/4, contentWidth/2, contentHeight/2)
-    rectangle22 = display.newRect( contentWidth*3/4, contentHeight/4, contentWidth/2, contentHeight/2)
-    rectangle23 = display.newRect( contentWidth/4, contentHeight*3/4, contentWidth/2, contentHeight/2)
-    rectangle24 = display.newRect( contentWidth*3/4, contentHeight*3/4, contentWidth/2, contentHeight/2)
+    rectangle21 = display.newRoundedRect( contentWidth/4, contentHeight/4, contentWidth/2, contentHeight/2-valWin*3.5, rounded)
+    rectangle22 = display.newRoundedRect( contentWidth*3/4, contentHeight/4, contentWidth/2, contentHeight/2-valWin*3.5, rounded)
+    rectangle23 = display.newRoundedRect( contentWidth/4, contentHeight*3/4, contentWidth/2, contentHeight/2-valWin*3.5, rounded)
+    rectangle24 = display.newRoundedRect( contentWidth*3/4, contentHeight*3/4, contentWidth/2, contentHeight/2-valWin*3.5, rounded)
     rectangle21.alpha = 0
     rectangle22.alpha = 0
     rectangle23.alpha = 0
     rectangle24.alpha = 0
 
-    rectangle31 = display.newRect( contentWidth/4, contentHeight/6, contentWidth/2, contentHeight/3)
-    rectangle32 = display.newRect( contentWidth*3/4, contentHeight/6, contentWidth/2, contentHeight/3)
-    rectangle33 = display.newRect( contentWidth/4, contentHeight/2, contentWidth/2, contentHeight/3)
-    rectangle34 = display.newRect( contentWidth*3/4, contentHeight/2, contentWidth/2, contentHeight/3)
-    rectangle35 = display.newRect( contentWidth/4, contentHeight*5/6, contentWidth/2, contentHeight/3)
-    rectangle36 = display.newRect( contentWidth*3/4, contentHeight*5/6, contentWidth/2, contentHeight/3)
+    rectangle31 = display.newRoundedRect( contentWidth/4, contentHeight/6, contentWidth/2, contentHeight/3-valWin*3.5, rounded)
+    rectangle32 = display.newRoundedRect( contentWidth*3/4, contentHeight/6, contentWidth/2, contentHeight/3-valWin*3.5, rounded)
+    rectangle33 = display.newRoundedRect( contentWidth/4, contentHeight/2, contentWidth/2, contentHeight/3-valWin*3.5, rounded)
+    rectangle34 = display.newRoundedRect( contentWidth*3/4, contentHeight/2, contentWidth/2, contentHeight/3-valWin*3.5, rounded)
+    rectangle35 = display.newRoundedRect( contentWidth/4, contentHeight*5/6, contentWidth/2, contentHeight/3-valWin*3.5, rounded)
+    rectangle36 = display.newRoundedRect( contentWidth*3/4, contentHeight*5/6, contentWidth/2, contentHeight/3-valWin*3.5, rounded)
     rectangle31.alpha = 0
     rectangle32.alpha = 0
     rectangle33.alpha = 0
@@ -89,22 +109,39 @@ rectangleBackground = display.newRect( contentWidth/2, contentHeight/2, contentW
 
     rectangleMessage = display.newRect( contentWidth/2, contentHeight/2, contentWidth, height*2.5/12)
       
-    textLevel = display.newText ("",contentWidth/4, originY-originY/2, native.systemFontBold, textSize*0.5)
-    textSequence = display.newText ("",contentWidth/4, contentHeight-originY/2, native.systemFontBold, textSize*0.5)
+    textLevel = display.newText ("",contentWidth/4, originY-originY/2+valWin, native.systemFontBold, textSize*0.5)
+    textSequence = display.newText ("",contentWidth/4, contentHeight-originY/2-valWin, native.systemFontBold, textSize*0.5)
 
-    textMessage1 = display.newText ("",contentWidth/2, (height/12)*4.8, native.systemFontBold, textSizeTitle*0.75)
-    textMessage2 = display.newText ("",contentWidth/2, (height/12)*5.6, native.systemFontBold, textSize*0.5)
+    textMessage1 = display.newText ("",contentWidth/2, (height/12)*4.8+valWin*2, native.systemFontBold, textSizeTitle*0.75)
+    textMessage2 = display.newText ("",contentWidth/2, (height/12)*5.6+valWin*2, native.systemFontBold, textSize*0.5)
 
 
     starVertices = { 0,-8,1.763,-2.427,7.608,-2.472,2.853,0.927,4.702,6.472,0.0,3.0,-4.702,6.472,-2.853,0.927,-7.608,-2.472,-1.763,-2.427 }
 
     rectangleStars = display.newRect( contentWidth/2, contentHeight/2, contentWidth, height*2.5/10)
-    textStars1 = display.newText ("", contentWidth/2, (height/12)*4.55, native.systemFontBold, textSizeTitle*0.75)
-    textStars2 = display.newText ("", contentWidth/2, (height/12)*6, native.systemFontBold, textSize*0.5)
+    textStars1 = display.newText ("", contentWidth/2, (height/12)*4.55+valWin*2, native.systemFontBold, textSizeTitle*0.75)
+    textStars2 = display.newText ("", contentWidth/2, (height/12)*6+valWin*2, native.systemFontBold, textSize*0.5)
 
-    showStar1 = display.newPolygon( 0, (height/12)*5.4, starVertices )
-    showStar2 = display.newPolygon( 0, (height/12)*5.4, starVertices )
-    showStar3 = display.newPolygon( 0, (height/12)*5.4, starVertices )
+    showStar1 = display.newPolygon( 0, (height/12)*5.4+valWin*2, starVertices )
+    showStar2 = display.newPolygon( 0, (height/12)*5.4+valWin*2, starVertices )
+    showStar3 = display.newPolygon( 0, (height/12)*5.4+valWin*2, starVertices )
+
+    buttonBack = widget.newButton
+        {
+          label = _s("back"),
+          emboss = false,
+          shape="roundedRect",
+          width = contentWidth*0.4,
+          height = textSize*0.5,
+          font = native.systemFontBold,
+          fontSize = textSize*0.5,
+          labelColor = { default={ 1, 1, 1 }, over={ 0, 0, 0, 0.5 }},
+          fillColor = { default={ 1, 0.4, 0.4}, over={ 1, 0.1, 0.7, 0.4 }},
+          onRelease = goBack
+        }
+
+        buttonBack.x = contentWidth*3/4
+        buttonBack.y = contentHeight-originY/2-valWin*0.8
 
     soundGameOver = audio.loadSound("sounds/game-over.mp3")
     soundNextLevel = audio.loadSound("sounds/next-level.mp3")
@@ -288,7 +325,7 @@ function rec (n)
 
 function calculateTotalTime()
   local recResult = rec(level +3)
-  totalTime = recResult*1500/FREQ
+  totalTime = recResult*1800/FREQ
   print("TOTAL TIME = "..totalTime)
 end
 
@@ -358,6 +395,8 @@ function nextLevel()
   level = level + 1
   end
   sequence = 1
+  FREQ = 800 - (level-1)*30
+  print("FREQ = "..FREQ)
   playSound("next-level")
   vibrate()
 end
@@ -434,6 +473,11 @@ end
 
 function initScreenGame()
       print("initScreenGame")
+      if(valWin==0)then
+        buttonBack.alpha=0
+      else
+        buttonBack.alpha=1
+      end
       rectangleStars:setFillColor(0.59,0.99,0.79)
       textStars1:setFillColor( 1, 0.4, 0.4 )
       showStar1:setFillColor( 1, 0.9, 0 )
@@ -453,19 +497,21 @@ function initScreenGame()
       textMessage1:setFillColor( 1, 0.4, 0.4 )
       textMessage2:setFillColor( 1, 1, 1 )
       if(world == 1)then
-       rectangle11:setFillColor(1,1,0.78)
+       --rectangle11:setFillColor(1,1,0.78)
+       rectangle11:setFillColor(gradient1)
        rectangle11.strokeWidth = 5
        rectangle11:setStrokeColor(1, 0.55, 0.55)
-       rectangle12:setFillColor(1,0.88,0.88)
+       --rectangle12:setFillColor(1,0.88,0.88)
+       rectangle12:setFillColor(gradient2)
        rectangle12.strokeWidth = 5
        rectangle12:setStrokeColor(1, 0.55, 0.55)
        rectangle11.alpha = 1
        rectangle12.alpha = 1
        elseif(world == 2)then
-       rectangle21:setFillColor(1,1,0.78)
+       rectangle21:setFillColor(gradient1)
        rectangle21.strokeWidth = 5
        rectangle21:setStrokeColor(1, 0.55, 0.55)
-       rectangle22:setFillColor(1,0.88,0.88)
+       rectangle22:setFillColor(gradient2)
        rectangle22.strokeWidth = 5
        rectangle22:setStrokeColor(1, 0.55, 0.55)
        rectangle23:setFillColor(0.88,0.88,1)
@@ -479,10 +525,10 @@ function initScreenGame()
        rectangle23.alpha = 1
        rectangle24.alpha = 1
        elseif(world == 3)then
-       rectangle31:setFillColor(1,1,0.78)
+       rectangle31:setFillColor(gradient1)
        rectangle31.strokeWidth = 5
        rectangle31:setStrokeColor(1, 0.55, 0.55)
-       rectangle32:setFillColor(1,0.88,0.88)
+       rectangle32:setFillColor(gradient2)
        rectangle32.strokeWidth = 5
        rectangle32:setStrokeColor(1, 0.55, 0.55)
        rectangle33:setFillColor(0.88,0.88,1)
@@ -549,7 +595,7 @@ end
 function startSequence()
   print("startSequence")
   initScreenGame()
-  timerShowEmpty = timer.performWithDelay(FREQ*1.5,showSequence)
+  timerShowEmpty = timer.performWithDelay(FREQ,showSequence)
 end
 
 function showEmptySequence()
@@ -793,6 +839,7 @@ function scene:create( event )
     sceneGroup:insert(rectangleStars) 
     sceneGroup:insert(textStars1) 
     sceneGroup:insert(textStars2) 
+    sceneGroup:insert(buttonBack)
 end
 
 -- On scene show...
