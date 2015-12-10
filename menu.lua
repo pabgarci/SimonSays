@@ -313,7 +313,7 @@ function scene:create( event )
 
         buttonRanking = widget.newButton
         {
-          label = _s("ranking"),
+          label = _s("achievements"),
           emboss = false,
           shape="roundedRect",
           width = contentWidth*0.9,
