@@ -387,13 +387,8 @@ function nextLevel()
   initScreenGame()
   NEXTLEVEL=true
   TOUCH = true
-<<<<<<< HEAD
-  print("HOLAHOLA World: "..world)
-  print("HOLAHOLA Level: "..level)
-=======
   print("HOLAA world " .. world)
   print("HOLAA level " .. level)
->>>>>>> 40af395fc21663f889840d12770c0a1ea87118aa
   if(world == 1 and level == 6)then
     showStars(_s("world").." 1 ".._s("completed"), _s("tap to continue"), levelStars)
     unlockAchievement("first-world")
