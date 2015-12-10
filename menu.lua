@@ -5,6 +5,7 @@ local widget = require( "widget" )
 local sqlite3 = require( "sqlite3" )
 local gameNetwork = require( "gameNetwork" )
 local localization = require( "mod_localize" )
+local FILE_unitTest = require("unitTest")
 
 local _s = localization.str
 local locale = system.getPreference("locale", "language")
