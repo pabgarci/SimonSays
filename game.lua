@@ -101,6 +101,36 @@ function calculateFrequency()
   FREQ = 800 - (level-1)*30
 end
 
+local facebook = require( "facebook" )
+local json = require( "json" ) --luego hay que descodificar
+
+---------------------------------------facebook-----------------------------------------
+
+local fbAppID = "867657486665321"  
+facebook.login( fbAppID, facebookListener, { "publish_actions" } )
+
+local function facebookListener( event )
+
+     if ( "session" == event.type ) then
+        --options are "login", "loginFailed", "loginCancelled", or "logout"
+        if ( "login" == event.phase ) then
+            local access_token = event.token
+            print("Login Successssssssssssssssssss")
+        end
+
+    elseif ( "request" == event.type ) then
+        print("facebook request")
+        if ( not event.isError ) then
+            local response = json.decode( event.response )
+            --process response data here
+        end
+
+    elseif ( "dialog" == event.type ) then
+        print( "dialog", event.response )
+        --handle dialog results here
+    end
+end
+
 checkPlatform()
 
 rectangleBackground = display.newRect( contentWidth/2, contentHeight/2, contentWidth, height)
