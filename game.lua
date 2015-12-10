@@ -54,7 +54,7 @@ local optionsTransition = {
       effect = "zoomInOutFade",
       time = 200
     }
-
+            
 local gradient1 = {
     type="gradient",
     color1={ 1,1,0.78 }, color2={ 1,0.95,0.46 }, direction="left"
@@ -63,6 +63,26 @@ local gradient1 = {
 local gradient2 = {
     type="gradient",
     color1={ 1,0.88,0.88 }, color2={ 0.96, 0.56, 0.69 }, direction="right"
+}
+
+local gradient3 = {
+    type="gradient",
+    color1={ 0.88,0.88,1 }, color2={ 0.73, 0.4, 0.78 }, direction="left"
+}
+
+local gradient4 = {
+    type="gradient",
+    color1={ 0.89,1,0.78 }, color2={ 0.68, 0.83, 0.5 }, direction="right"
+}
+
+local gradient5 = {
+    type="gradient",
+    color1={ 0.99,0.92,0.82 }, color2={ 1, 0.71, 0.3 }, direction="left"
+}
+
+local gradient6 = {
+    type="gradient",
+    color1={ 0.88,1,1 }, color2={ 0.3, 0.81, 1 }, direction="right"
 }
 
 function checkPlatform()
@@ -208,7 +228,9 @@ function setCurrentLevel(worldAux, levelAux)
   print("worldAux"..worldAux)
   print("levelAuxR"..getCurrentLevel(worldAux))
 end
-
+ setCurrentLevel(1,6)
+  setCurrentLevel(2,12)
+   setCurrentLevel(3,18)
 
 local function getStars(worldAux, levelAux)
   local retStars
@@ -514,10 +536,10 @@ function initScreenGame()
        rectangle22:setFillColor(gradient2)
        rectangle22.strokeWidth = 5
        rectangle22:setStrokeColor(1, 0.55, 0.55)
-       rectangle23:setFillColor(0.88,0.88,1)
+       rectangle23:setFillColor(gradient3)
        rectangle23.strokeWidth = 5
        rectangle23:setStrokeColor(1, 0.55, 0.55)
-       rectangle24:setFillColor(0.89,1,0.78)
+       rectangle24:setFillColor(gradient4)
        rectangle24.strokeWidth = 5
        rectangle24:setStrokeColor(1, 0.55, 0.55)
        rectangle21.alpha = 1
@@ -531,16 +553,16 @@ function initScreenGame()
        rectangle32:setFillColor(gradient2)
        rectangle32.strokeWidth = 5
        rectangle32:setStrokeColor(1, 0.55, 0.55)
-       rectangle33:setFillColor(0.88,0.88,1)
+       rectangle33:setFillColor(gradient3)
        rectangle33.strokeWidth = 5
        rectangle33:setStrokeColor(1, 0.55, 0.55)
-       rectangle34:setFillColor(0.89,1,0.78)
+       rectangle34:setFillColor(gradient4)
        rectangle34.strokeWidth = 5
        rectangle34:setStrokeColor(1, 0.55, 0.55)
        rectangle35.strokeWidth = 5
-       rectangle35:setFillColor(0.99,0.89,0.78)
+       rectangle35:setFillColor(gradient5)
        rectangle35:setStrokeColor(1, 0.55, 0.55)
-       rectangle36:setFillColor(0.88,1,1)
+       rectangle36:setFillColor(gradient6)
        rectangle36.strokeWidth = 5
        rectangle36:setStrokeColor(1, 0.55, 0.55)
        rectangle31.alpha = 1
