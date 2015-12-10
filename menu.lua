@@ -414,11 +414,12 @@ local function onKeyEvent( event )
   local phase = event.phase
   local keyName = event.keyName
   local scene = composer.getSceneName( "current" )
-  
-  if ("back" == keyName and phase == "down") or ("b" == keyName and phase == "down" and system.getInfo("environment") == "simulator")  then 
-    if (backscene[scene]) then
-      backscene[scene]()
-      return true
+  if("Win"==system.getInfo("platformName") or system.getInfo("environment") == "simulator")then
+    if ("back" == keyName and phase == "down") or ("b" == keyName and phase == "down")  then 
+      if (backscene[scene]) then
+        backscene[scene]()
+        return true
+      end
     end
   end
   return false

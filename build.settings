@@ -48,6 +48,7 @@ settings =
 	        ["facebook"] =
 	        {
 	            publisherId = "com.coronalabs",
+	            supportedPlatforms = { android=true }
 	        },
 	    
 	    
