@@ -247,9 +247,9 @@ end
 function getTextLabel()
     if(getCurrentLevel(1)~=1)then
       print("current level "..getCurrentLevel(1))
-      textLabel = _s("continue")
+      buttonStart:setLabel(_s("continue"))
     else
-      textLabel = _s("start")
+      buttonStart:setLabel(_s("start"))
     end
 end
 
@@ -260,7 +260,6 @@ function scene:create( event )
 
     initDataBase()
     initData()
-    getTextLabel()
 
     background = display.newRect( contentWidth/2, contentHeight/2, contentWidth, height)
        background:setFillColor(0.59,0.99,0.79)
@@ -284,7 +283,7 @@ function scene:create( event )
 
        buttonStart = widget.newButton
         {
-          label = textLabel,
+          label = "",
           emboss = false,
           shape="roundedRect",
           width = contentWidth*0.9,
@@ -296,7 +295,8 @@ function scene:create( event )
     
         }
 
-      
+        getTextLabel()
+
         buttonLevels = widget.newButton
         {
           label = _s("levels"),
@@ -382,8 +382,10 @@ end
 function scene:show( event )
     local sceneGroup = self.view
     local phase = event.phase
-
-    if phase == "did" then
+    if phase == "will" then
+      getTextLabel()
+          SOUND = getSound()
+    elseif phase == "did" then
           getTextLabel()
           SOUND = getSound()
           if(SOUND)then

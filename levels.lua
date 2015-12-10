@@ -12,7 +12,7 @@ local db = sqlite3.open( path )
 
 local scene = composer.newScene()
 
-local maxLevels, buttonBack, valWin, world
+local maxLevels, buttonBack, valWin, worldL
 
 local background
 local contentWidth = display.contentWidth
@@ -70,13 +70,11 @@ end
 
 local function handleLevelSelect( event )
     if ( "ended" == event.phase ) then
-      
-        composer.setVariable("worldTarget",world)
+        composer.setVariable("worldTarget",worldL)
         composer.setVariable("levelTarget",event.target.id)
         composer.setVariable("origin",1)
         composer.removeScene("game")
         composer.gotoScene( "game", { effect = "fade", time = 200 } )
-    
     end
 end
 
@@ -91,7 +89,7 @@ end
 function scene:show( event )
     local sceneGroup = self.view
     if ( event.phase == "will" ) then
-    world = composer.getVariable("world")
+    worldL = composer.getVariable("worldC")
     checkPlatform()
     local levelSelectGroup = widget.newScrollView({
         width = contentWidth,
@@ -109,11 +107,11 @@ function scene:show( event )
     local cellCount = 1
     local buttons = {}
 
-    if(world == 1)then
+    if(worldL == 1)then
            maxLevels = 6
-           elseif(world == 2)then
+           elseif(worldL == 2)then
             maxLevels = 12
-            elseif(world == 3)then
+            elseif(worldL == 3)then
                 maxLevels = 18
         end
     
@@ -141,7 +139,7 @@ function scene:show( event )
         buttons[i].y = yOffset
         levelSelectGroup:insert( buttons[i] )
 
-        if ( i <= getCurrentLevel(world) ) then
+        if ( i <= getCurrentLevel(worldL) ) then
             buttons[i]:setEnabled( true )
             buttons[i].alpha = 1.0
         else 
@@ -150,8 +148,8 @@ function scene:show( event )
         end 
 
         local star = {} 
-            for j = 1, getStars(world, i) do
-                print("level "..i.." stars "..getStars(world,i))
+            for j = 1, getStars(worldL, i) do
+                print("level "..i.." stars "..getStars(worldL,i))
                 star[j] = display.newPolygon( 0, 0, starVertices )
                 star[j]:setFillColor( 1, 0.9, 0 )
                 star[j].strokeWidth = 1

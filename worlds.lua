@@ -135,7 +135,7 @@ function scene:show( event )
           function buttonWorld1:touch ( event )
                 local phase = event.phase
                 if "ended" == phase then
-                    composer.setVariable("world",1)
+                    composer.setVariable("worldC",1)
                     composer.gotoScene( "levels", optionsTransition )
                 end
           end
@@ -143,7 +143,7 @@ function scene:show( event )
           function buttonWorld2:touch ( event )
                 local phase = event.phase
                 if "ended" == phase then
-                    composer.setVariable("world",2)
+                    composer.setVariable("worldC",2)
                     composer.gotoScene( "levels", optionsTransition )
                 end
           end
@@ -151,7 +151,7 @@ function scene:show( event )
           function buttonWorld3:touch ( event )
                 local phase = event.phase
                 if "ended" == phase then
-                    composer.setVariable("world",3)
+                    composer.setVariable("worldC",3)
                     composer.gotoScene( "levels", optionsTransition )
                 end
           end

@@ -366,6 +366,8 @@ function nextLevel()
   initScreenGame()
   NEXTLEVEL=true
   TOUCH = true
+  print("HOLAHOLA World: "..world)
+  print("HOLAHOLA Level: "..level)
   if(world == 1 and level == 6)then
     showStars(_s("world").." 1 ".._s("completed"), _s("tap to continue"), levelStars)
     unlockAchievement("first-world")
@@ -387,17 +389,17 @@ function nextLevel()
       world = 1
       level = 1
       setCurrentLevel(world,level)
-  else
-  showStars("level "..level.." completed", _s("tap to continue"), levelStars)
-  setCurrentLevel(world,level+1)
-  unlockAchievement("first-level")
-  if(stars==3)then
-    unlockAchievement("three-stars")
-  end
-  setStars(world, level, levelStars)
-  print("STARS = "..levelStars)
-  level = level + 1
-  end
+    else
+      showStars("level "..level.." completed", _s("tap to continue"), levelStars)
+      setCurrentLevel(world,level+1)
+      unlockAchievement("first-level")
+      if(stars==3)then
+        unlockAchievement("three-stars")
+      end
+      setStars(world, level, levelStars)
+      print("STARS = "..levelStars)
+      level = level + 1
+    end
   sequence = 1
   calculateFrequency()
   print("FREQ = "..FREQ)
@@ -421,6 +423,8 @@ function checkLevel(worldAux, levelAux)
     world = worldAux
     level = levelAux
   end
+  print("CHECKLEVEL2 Level: "..level)
+  print("CHECKLEVEL2 Level: "..level)
 end
 
 function changeColor(color)
@@ -579,7 +583,6 @@ function checkSequence(num)
       
       if (countCheck>sequence and GAMEOVER)then  -- seq passed
         sequence = sequence +1
-        --FREQ = FREQ-((world*100+400)/(level+3))
         print(FREQ)
         TOUCH = false
         if(sequence==(level+4))then
