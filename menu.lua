@@ -366,6 +366,12 @@ function scene:create( event )
         buttonRanking.x = display.contentCenterX
         buttonRanking.y = (height/10)*6.3
 
+        if(system.getInfo("environment") == "device" and "Win"==system.getInfo("platformName"))then
+        buttonRanking.alpha=0
+        checkVibrate.alpha=0
+        textVibrate.alpha=0
+        end
+
         sceneGroup:insert(checkSound)
         sceneGroup:insert(checkVibrate)
         sceneGroup:insert(buttonStart)
@@ -378,6 +384,7 @@ function scene:show( event )
     local phase = event.phase
 
     if phase == "did" then
+          getTextLabel()
           SOUND = getSound()
           if(SOUND)then
           audio.play(soundThemeSong,{channel=1,loops=-1})

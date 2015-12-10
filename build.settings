@@ -81,6 +81,20 @@ settings =
 		},
 	},
 
+	window = {
+        resizable = true,
+        enableMinimizeButton = true,
+        enableMaximizeButton = true,
+        titleText = {
+            default = "Who Says?",
+            ["en‐us"] = "Who Says?",
+            ["en‐gb"] = "Who Says?",
+            ["en"] = "Who Says?",
+            ["fr"] = "Qui dit?",
+            ["es"] = "Quién dice?",
+        },
+    },
+
 plugins =
 {
  	
