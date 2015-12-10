@@ -21,6 +21,7 @@ local TOUCH = false
 local GAMEOVER = true
 local SAVE = true
 local KEYSOUND = true
+local ENDGAME = false
 local SOUND, VIBRATE, soundNextLevel, soundGameOver, starsTimer
 local timerShow, timerShowEmpty
 local soundRectangle1, soundRectangle2, soundRectangle3, soundRectangle4, soundRectangle5, soundRectangle6
@@ -54,7 +55,7 @@ local optionsTransition = {
       effect = "zoomInOutFade",
       time = 200
     }
-
+            
 local gradient1 = {
     type="gradient",
     color1={ 1,1,0.78 }, color2={ 1,0.95,0.46 }, direction="left"
@@ -63,6 +64,26 @@ local gradient1 = {
 local gradient2 = {
     type="gradient",
     color1={ 1,0.88,0.88 }, color2={ 0.96, 0.56, 0.69 }, direction="right"
+}
+
+local gradient3 = {
+    type="gradient",
+    color1={ 0.88,0.88,1 }, color2={ 0.73, 0.4, 0.78 }, direction="left"
+}
+
+local gradient4 = {
+    type="gradient",
+    color1={ 0.89,1,0.78 }, color2={ 0.68, 0.83, 0.5 }, direction="right"
+}
+
+local gradient5 = {
+    type="gradient",
+    color1={ 0.99,0.92,0.82 }, color2={ 1, 0.71, 0.3 }, direction="left"
+}
+
+local gradient6 = {
+    type="gradient",
+    color1={ 0.88,1,1 }, color2={ 0.3, 0.81, 1 }, direction="right"
 }
 
 function checkPlatform()
@@ -366,8 +387,13 @@ function nextLevel()
   initScreenGame()
   NEXTLEVEL=true
   TOUCH = true
+<<<<<<< HEAD
   print("HOLAHOLA World: "..world)
   print("HOLAHOLA Level: "..level)
+=======
+  print("HOLAA world " .. world)
+  print("HOLAA level " .. level)
+>>>>>>> 40af395fc21663f889840d12770c0a1ea87118aa
   if(world == 1 and level == 6)then
     showStars(_s("world").." 1 ".._s("completed"), _s("tap to continue"), levelStars)
     unlockAchievement("first-world")
@@ -375,6 +401,7 @@ function nextLevel()
     world = 2
     level = 1
     setCurrentLevel(world,level)
+    sequence=4
     elseif(world == 2 and level == 12)then
       showStars("world 2 completed", _s("tap to continue"), levelStars)
       unlockAchievement("second-world")
@@ -383,9 +410,12 @@ function nextLevel()
       level = 1
       setCurrentLevel(world,level)
     elseif(world == 3 and level == 18)then
+      sequence=4
       showStars("world 3 completed", _s("tap to continue"), levelStars)
       unlockAchievement("third-world")
       setStars(world, level, levelStars)
+      ENDGAME=true
+      NEXTLEVEL=false
       world = 1
       level = 1
       setCurrentLevel(world,level)
@@ -522,10 +552,10 @@ function initScreenGame()
        rectangle22:setFillColor(gradient2)
        rectangle22.strokeWidth = 5
        rectangle22:setStrokeColor(1, 0.55, 0.55)
-       rectangle23:setFillColor(0.88,0.88,1)
+       rectangle23:setFillColor(gradient3)
        rectangle23.strokeWidth = 5
        rectangle23:setStrokeColor(1, 0.55, 0.55)
-       rectangle24:setFillColor(0.89,1,0.78)
+       rectangle24:setFillColor(gradient4)
        rectangle24.strokeWidth = 5
        rectangle24:setStrokeColor(1, 0.55, 0.55)
        rectangle21.alpha = 1
@@ -539,16 +569,16 @@ function initScreenGame()
        rectangle32:setFillColor(gradient2)
        rectangle32.strokeWidth = 5
        rectangle32:setStrokeColor(1, 0.55, 0.55)
-       rectangle33:setFillColor(0.88,0.88,1)
+       rectangle33:setFillColor(gradient3)
        rectangle33.strokeWidth = 5
        rectangle33:setStrokeColor(1, 0.55, 0.55)
-       rectangle34:setFillColor(0.89,1,0.78)
+       rectangle34:setFillColor(gradient4)
        rectangle34.strokeWidth = 5
        rectangle34:setStrokeColor(1, 0.55, 0.55)
        rectangle35.strokeWidth = 5
-       rectangle35:setFillColor(0.99,0.89,0.78)
+       rectangle35:setFillColor(gradient5)
        rectangle35:setStrokeColor(1, 0.55, 0.55)
-       rectangle36:setFillColor(0.88,1,1)
+       rectangle36:setFillColor(gradient6)
        rectangle36.strokeWidth = 5
        rectangle36:setStrokeColor(1, 0.55, 0.55)
        rectangle31.alpha = 1
@@ -680,11 +710,16 @@ function click(worldAux, num)
         NEXTLEVEL=false
         GAMEOVER = true
         timer.performWithDelay(FREQ/3,startSequence)
-      else
+        elseif(ENDGAME==true)then
+          showMessage("congratulations! you have finished the game =)")
+          timer.performWithDelay(5000,goBack)
+  else
        checkSequence(num)
        changeColor(num)
        timer.performWithDelay(FREQ/10,initScreenGame)
-      end
+
+  end
+
 end
 
 function rectangle11:touch( event )
