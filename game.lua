@@ -76,6 +76,10 @@ function goBack()
  composer.gotoScene("menu", optionsTransition)
 end
 
+function calculateFrequency()
+  FREQ = 800 - (level-1)*30
+end
+
 checkPlatform()
 
 rectangleBackground = display.newRect( contentWidth/2, contentHeight/2, contentWidth, height)
@@ -395,7 +399,7 @@ function nextLevel()
   level = level + 1
   end
   sequence = 1
-  FREQ = 800 - (level-1)*30
+  calculateFrequency()
   print("FREQ = "..FREQ)
   playSound("next-level")
   vibrate()
@@ -889,6 +893,7 @@ end
       else
       checkLevel()
       end
+      calculateFrequency()
       calculateTotalTime()
       fillArray()
 ----------------------------------------------------------------

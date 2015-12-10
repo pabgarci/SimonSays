@@ -97,13 +97,12 @@ settings =
 
 plugins =
 {
- 	plugins =
-    {
+ 	
         ["facebook"] =
         {
-            publisherId = "com.coronalabs"
+            publisherId = "com.coronalabs",
         },
-    },
+    
     
    ["CoronaProvider.gameNetwork.google"] =
    {

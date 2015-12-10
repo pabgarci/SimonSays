@@ -95,17 +95,17 @@ function scene:show( event )
     checkPlatform()
     local levelSelectGroup = widget.newScrollView({
         width = contentWidth,
-        height = contentHeight+originY-valWin,
+        height = contentHeight-valWin,
 
         scrollWidth = contentWidth,
-        scrollHeight = contentHeight+originY/2,
+        scrollHeight = contentHeight-valWin,
         backgroundColor = { 0.59,0.99,0.79 },
         horizontalScrollDisabled = true
 
     })
   
     local xOffset = contentWidth*3/14
-    local yOffset = -originY*2 + valWin*2
+    local yOffset = -originY*3 + valWin*2
     local cellCount = 1
     local buttons = {}
 
@@ -172,7 +172,7 @@ function scene:show( event )
 
     sceneGroup:insert( levelSelectGroup )
     levelSelectGroup.x = display.contentCenterX
-    levelSelectGroup.y = display.contentCenterY
+    levelSelectGroup.y = display.contentCenterY+originY
 
     buttonBackLevels = widget.newButton
         {
