@@ -5,10 +5,12 @@ local widget = require( "widget" )
 local sqlite3 = require( "sqlite3" )
 local gameNetwork = require( "gameNetwork" )
 local localization = require( "mod_localize" )
+local facebook = require( "facebook" )
+local json = require( "json" )
 
 local _s = localization.str
 
-local playerName, googlePlayGames
+local playerName, googlePlayGames, fbObject
 
 local path = system.pathForFile( "data.db", system.DocumentsDirectory )
 local db = sqlite3.open( path )
@@ -101,9 +103,6 @@ function calculateFrequency()
   FREQ = 800 - (level-1)*30
 end
 
-local facebook = require( "facebook" )
-local json = require( "json" ) --luego hay que descodificar
-
 ---------------------------------------facebook-----------------------------------------
 
 local fbAppID = "867657486665321"  
@@ -130,6 +129,31 @@ local function facebookListener( event )
         --handle dialog results here
     end
 end
+
+-- post on facebook--
+
+function fbPublish(fbLevel, fbWorld, fbStars)
+  local fbMessage
+  if(fbWorld~=nil)then
+    fbMessage = "I've completed world "..fbWorld.." got "..fbStars.." stars"
+      else
+        fbMessage = "I've completed level "..fbLevel.." got "..fbStars.." stars"
+  end
+  fbObject = facebook.showDialog( "feed", 
+          { 
+            app_id = fbAppID, 
+            picture = "http://www.pabgarci.es/project/whosays/icon.png", 
+            description = fbMessage,
+            name = "Who Says? Try this adictive new game!",
+            link = "http://www.pabgarci.es/project/whosays/"  }, fbListener )
+  --fbObject:addEventListener( "touch", fbObject )
+end
+
+function fbListener()
+  print("SOY ESPECIAL")
+end
+
+fbPublish(12, 1, 3)
 
 checkPlatform()
 
