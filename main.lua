@@ -18,5 +18,4 @@ initData()
 
 lunatest.suite("unitTest")
 lunatest.run()
-lunatest.run()
 composer.gotoScene( "menu" )

@@ -1,5 +1,4 @@
 
-local gameNetwork = require( "gameNetwork" )
 local sqlite3 = require( "sqlite3" )
 local path = system.pathForFile( "data.db", system.DocumentsDirectory )
 local db = sqlite3.open( path )
@@ -124,36 +123,6 @@ function initData()
   if(getCurrentLevel(3)==0)then
     setCurrentLevel(3,0)
   end
-end
-
-local function loadLocalPlayerCallback( event )
-  playerName = event.data.alias
-  showPlayerName()
-  if(event.data.isError==false)then
-    googlePlayGames=true
-    else
-      googlePlayGames=false
-  end
-end
-
-function gameNetworkLoginCallback( event )
-  gameNetwork.request( "loadLocalPlayer", { listener=loadLocalPlayerCallback } )
-  return true
-end
-
-function gpgsInitCallback( event )
-   gameNetwork.request( "login", { userInitiated=true, listener=gameNetworkLoginCallback } )
-end
-
-function gameNetworkSetup()
-  if("Android"==system.getInfo( "platformName" ))then
-    gameNetwork.init( "google", gpgsInitCallback )
- end
-end
-
-
-function letsPrint(msg)
-print("ousvbdkjaldvuclaisbjbdvhbakjnñ -- "..msg)
 end
 
 return common

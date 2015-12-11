@@ -1,5 +1,6 @@
 local sceneName = "menu"
 
+local gameNetwork = require( "gameNetwork" )
 local composer = require( "composer" )
 local widget = require( "widget" )
 local localization = require( "mod_localize" )
@@ -269,6 +270,31 @@ end
 
 function goBack(scene)
   composer.gotoScene(scene, optionsTransition)
+end
+
+local function loadLocalPlayerCallback( event )
+  playerName = event.data.alias
+  showPlayerName()
+  if(event.data.isError==false)then
+    googlePlayGames=true
+    else
+      googlePlayGames=false
+  end
+end
+
+function gameNetworkLoginCallback( event )
+  gameNetwork.request( "loadLocalPlayer", { listener=loadLocalPlayerCallback } )
+  return true
+end
+
+function gpgsInitCallback( event )
+   gameNetwork.request( "login", { userInitiated=true, listener=gameNetworkLoginCallback } )
+end
+
+function gameNetworkSetup()
+  if("Android"==system.getInfo( "platformName" ))then
+    gameNetwork.init( "google", gpgsInitCallback )
+ end
 end
 
 local function onKeyEvent( event )

@@ -3,6 +3,7 @@ local sceneName = "game"
 local composer = require( "composer" )
 local common = require("common")
 local widget = require( "widget" )
+local gameNetwork = require( "gameNetwork" )
 local facebook = require( "facebook" )
 local json = require( "json" )
 local localization = require( "mod_localize" )
@@ -373,7 +374,7 @@ function nextLevel()
       level = 1
       setCurrentLevel(world,level)
     else
-      showStars(_s("level").." "..level.._s(" completed"), _s("tap to continue"), levelStars)
+      showStars(_s("level").." "..level.." ".._s("completed"), _s("tap to continue"), levelStars)
       setCurrentLevel(world,level+1)
       unlockAchievement("first-level")
       if(stars==3)then
