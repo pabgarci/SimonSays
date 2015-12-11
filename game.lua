@@ -26,6 +26,7 @@ local soundRectangle1, soundRectangle2, soundRectangle3, soundRectangle4, soundR
 local rectangle11, rectangle12, rectangle21, rectangle22, rectangle23, rectangle24
 local rectangle31, rectangle32, rectangle33, rectangle34, rectangle35, rectangle36
 local rectangleBackground, rectangleMessage
+local imageShareFb
 
 local textMessage1, textMessage2, textSequence, textLevel, textStars1, textStars2
 
@@ -169,7 +170,7 @@ rectangleBackground = display.newRect( contentWidth/2, contentHeight/2, contentW
     rectangle35.alpha = 0
     rectangle36.alpha = 0
 
-    rectangleMessage = display.newRect( contentWidth/2, contentHeight/2, contentWidth, height*2.5/12)
+    rectangleMessage = display.newRect( contentWidth/2, contentHeight/2, contentWidth, height*2.7/12)
       
     textLevel = display.newText ("",contentWidth/4, originY-originY/2+valWin, native.systemFontBold, textSize*0.5)
     textSequence = display.newText ("",contentWidth/4, contentHeight-originY/2-valWin, native.systemFontBold, textSize*0.5)
@@ -177,16 +178,19 @@ rectangleBackground = display.newRect( contentWidth/2, contentHeight/2, contentW
     textMessage1 = display.newText ("",contentWidth/2, (height/12)*4.8+valWin*2, native.systemFontBold, textSizeTitle*0.75)
     textMessage2 = display.newText ("",contentWidth/2, (height/12)*5.6+valWin*2, native.systemFontBold, textSize*0.5)
 
-
     starVertices = { 0,-8,1.763,-2.427,7.608,-2.472,2.853,0.927,4.702,6.472,0.0,3.0,-4.702,6.472,-2.853,0.927,-7.608,-2.472,-1.763,-2.427 }
 
     rectangleStars = display.newRect( contentWidth/2, contentHeight/2, contentWidth, height*2.5/10)
-    textStars1 = display.newText ("", contentWidth/2, (height/12)*4.55+valWin*2, native.systemFontBold, textSizeTitle*0.6)
-    textStars2 = display.newText ("", contentWidth/2, (height/12)*6+valWin*2, native.systemFontBold, textSize*0.5)
+    textStars1 = display.newText ("", contentWidth/2, (height/12)*4.2+valWin*2, native.systemFontBold, textSizeTitle*0.6)
+    textStars2 = display.newText ("", contentWidth/2, (height/12)*6.2+valWin*2, native.systemFontBold, textSize*0.5)
+    imageShareFb = display.newImageRect( "images/facebook-share-button.png", contentWidth/4, textSizeTitle*0.65 )
+    imageShareFb.x = contentWidth/2
+    imageShareFb.y = (height/12)*5.6+valWin*2
+    imageShareFb.isVisible = false
 
-    showStar1 = display.newPolygon( 0, (height/12)*5.4+valWin*2, starVertices )
-    showStar2 = display.newPolygon( 0, (height/12)*5.4+valWin*2, starVertices )
-    showStar3 = display.newPolygon( 0, (height/12)*5.4+valWin*2, starVertices )
+    showStar1 = display.newPolygon( 0, (height/12)*4.9+valWin*2, starVertices )
+    showStar3 = display.newPolygon( 0, (height/12)*4.9+valWin*2, starVertices )
+    showStar2 = display.newPolygon( 0, (height/12)*4.9+valWin*2, starVertices )
 
     buttonBack = widget.newButton
         {
@@ -228,6 +232,7 @@ function showStars(message1, message2, levelStars)
   textStars2.alpha = 1
   textStars1.text = message1
   textStars2.text = message2
+  imageShareFb.isVisible = true
   if(levelStars==1)then
     showStar1.x = contentWidth/2
     showStar1.alpha = 1
@@ -368,7 +373,7 @@ function nextLevel()
       level = 1
       setCurrentLevel(world,level)
     else
-      showStars(_s("level").." "..level.._s("completed"), _s("tap to continue"), levelStars)
+      showStars(_s("level").." "..level.._s(" completed"), _s("tap to continue"), levelStars)
       setCurrentLevel(world,level+1)
       unlockAchievement("first-level")
       if(stars==3)then
@@ -418,7 +423,7 @@ function changeColor(color)
         rectangle22:setFillColor(1,0.29,0.29)
         playSound("rectangle-2")
       elseif (color==3)then
-        rectangle23:setFillColor(0.29,0.29,0.99)
+        rectangle23:setFillColor(0.45,0.35,0.67)
         playSound("rectangle-3")
       elseif (color==4)then
         rectangle24:setFillColor(0.64,0.99,0.29)
@@ -432,7 +437,7 @@ function changeColor(color)
         rectangle32:setFillColor(1,0.29,0.29)
        playSound("rectangle-2")
       elseif (color==3)then
-        rectangle33:setFillColor(0.29,0.29,0.99)
+        rectangle33:setFillColor(0.45,0.35,0.67)
         playSound("rectangle-3")
       elseif (color==4)then
         rectangle34:setFillColor(0.64,0.99,0.29) 
@@ -633,6 +638,7 @@ function deleteMessage()
   showStar1.alpha=0
   showStar2.alpha=0
   showStar3.alpha=0
+  imageShareFb.isVisible = false
 end
 
 function click(worldAux, num)
@@ -806,6 +812,7 @@ function scene:create( event )
   sceneGroup:insert(textStars1) 
   sceneGroup:insert(textStars2) 
   sceneGroup:insert(buttonBack)
+  sceneGroup:insert(imageShareFb)
 end
 
 function scene:show( event )
