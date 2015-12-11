@@ -502,7 +502,7 @@ function changeColor(color)
         rectangle22:setFillColor(1,0.29,0.29)
         playSound("rectangle-2")
       elseif (color==3)then
-        rectangle23:setFillColor(0.29,0.29,0.99)
+        rectangle23:setFillColor(0.45,0.35,0.67)
         playSound("rectangle-3")
       elseif (color==4)then
         rectangle24:setFillColor(0.64,0.99,0.29)
@@ -516,7 +516,7 @@ function changeColor(color)
         rectangle32:setFillColor(1,0.29,0.29)
        playSound("rectangle-2")
       elseif (color==3)then
-        rectangle33:setFillColor(0.29,0.29,0.99)
+        rectangle33:setFillColor(0.45,0.35,0.67)
         playSound("rectangle-3")
       elseif (color==4)then
         rectangle34:setFillColor(0.64,0.99,0.29) 
