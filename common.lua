@@ -1,7 +1,24 @@
 
 local sqlite3 = require( "sqlite3" )
+local composer = require( "composer" )
 local path = system.pathForFile( "data.db", system.DocumentsDirectory )
 local db = sqlite3.open( path )
+
+local optionsTransition = {
+      effect = "zoomInOutFade",
+      time = 200
+    }
+
+function goBack()
+ composer.gotoScene("menu", optionsTransition)
+end
+
+local backscene = {
+    ["menu"] = function () os.exit() end,
+    ["levels"] = function () goBack ("worlds") end,
+    ["game"] = function () goBack ("menu") end,
+    ["worlds"] = function () goBack ("levels") end
+  }
 
 function getCurrentLevel(worldAux)
   local retCurrentLevel
@@ -124,5 +141,23 @@ function initData()
     setCurrentLevel(3,0)
   end
 end
+
+function onKeyEvent( event )
+
+  local phase = event.phase
+  local keyName = event.keyName
+  local scene = composer.getSceneName( "current" )
+  if("Win"==system.getInfo("platformName") or system.getInfo("environment") == "simulator")then
+    if ("back" == keyName and phase == "down") or ("b" == keyName and phase == "down")  then 
+      if (backscene[scene]) then
+        print("BACK")
+        backscene[scene]()
+        return true
+      end
+    end
+  end
+end
+
+Runtime:addEventListener( "key", onKeyEvent )
 
 return common

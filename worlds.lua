@@ -1,9 +1,8 @@
 local sceneName = "worlds"
 local composer = require( "composer" )
+local common = require("common")
 local widget = require( "widget" )
 local localization = require( "mod_localize" )
-local _s = localization.str
-
 local _s = localization.str
 
 local playerName, googlePlayGames, valWin

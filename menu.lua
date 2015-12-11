@@ -1,6 +1,7 @@
 local sceneName = "menu"
 
 local gameNetwork = require( "gameNetwork" )
+local common = require("common")
 local composer = require( "composer" )
 local widget = require( "widget" )
 local localization = require( "mod_localize" )
@@ -50,13 +51,6 @@ local checkboxOptions = {
     sheetContentWidth = 36,
     sheetContentHeight = 32
 }
-
-local backscene = {
-    ["menu"] = function () os.exit() end,
-    ["levels"] = function () goBack ("worlds") end,
-    ["game"] = function () goBack ("menu") end,
-    ["worlds"] = function () goBack ("levels") end
-  }
 
 local optionsTransition = {
       effect = "zoomInOutFade",
@@ -297,23 +291,6 @@ function gameNetworkSetup()
  end
 end
 
-local function onKeyEvent( event )
-
-  local phase = event.phase
-  local keyName = event.keyName
-  local scene = composer.getSceneName( "current" )
-  if("Win"==system.getInfo("platformName") or system.getInfo("environment") == "simulator")then
-    if ("back" == keyName and phase == "down") or ("b" == keyName and phase == "down")  then 
-      if (backscene[scene]) then
-        backscene[scene]()
-        return true
-      end
-    end
-  end
-  return false
-end
-
-Runtime:addEventListener( "key", onKeyEvent )
 scene:addEventListener( "create", scene )
 scene:addEventListener( "show", scene )
 scene:addEventListener( "hide", scene )
