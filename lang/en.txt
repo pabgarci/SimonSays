@@ -11,5 +11,6 @@ achievements = achievements
 back = back
 completed = completed
 tap to continue = tap to continue
+tap to retry = tap to retry
 select world = select world
 seq = seq
