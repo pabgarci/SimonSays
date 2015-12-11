@@ -1,20 +1,15 @@
 local sceneName = "game"
 
 local composer = require( "composer" )
+local common = require("common")
 local widget = require( "widget" )
-local sqlite3 = require( "sqlite3" )
-local gameNetwork = require( "gameNetwork" )
-local localization = require( "mod_localize" )
 local facebook = require( "facebook" )
 local json = require( "json" )
+local localization = require( "mod_localize" )
 
 local _s = localization.str
 
 local playerName, googlePlayGames, fbObject
-
-local path = system.pathForFile( "data.db", system.DocumentsDirectory )
-local db = sqlite3.open( path )
-
 local scene = composer.newScene()
 
 local FREQ = 800
@@ -129,8 +124,6 @@ local function facebookListener( event )
     end
 end
 
--- post on facebook--
-
 function fbPublish(fbLevel, fbWorld, fbStars)
   local fbMessage
   if(fbWorld~=nil)then
@@ -145,10 +138,6 @@ function fbPublish(fbLevel, fbWorld, fbStars)
             description = fbMessage,
             name = "Who Says? Try this adictive new game!",
             link = "http://www.pabgarci.es/project/whosays/"  }, fbListener )
-  --fbObject:addEventListener( "touch", fbObject )
-end
-
-function fbListener()
 end
 
 checkPlatform()
@@ -229,77 +218,6 @@ rectangleBackground = display.newRect( contentWidth/2, contentHeight/2, contentW
     soundRectangle4 = audio.loadSound("sounds/rectangle_4.mp3")
     soundRectangle5 = audio.loadSound("sounds/rectangle_5.mp3")
     soundRectangle6 = audio.loadSound("sounds/rectangle_6.mp3")
-    
-local function getSound()
-  local boolSound
-    for row in db:nrows("SELECT * FROM data WHERE id=4") do
-        retSound=row.info
-    end
-  if(retSound==nil) then
-      retSound = true
-  end
-  if(retSound==1)then
-    boolSound=true
-    elseif(retSound==0)then
-      boolSound=false
-    end
-  return boolSound  
-end
-
-local function getVibrate()
-  local boolVibrate
-    for row in db:nrows("SELECT * FROM data WHERE id=5") do
-        retVibrate=row.info
-    end
-  if(retVibrate==nil) then
-      boolVibrate = true
-  end
-  if(retVibrate==1)then
-    boolVibrate=true
-    elseif(retVibrate==0)then
-      boolVibrate=false
-    end
-  return boolVibrate  
-end
-
-local function getCurrentLevel(worldAux)
-  local retCurrentLevel
-    for row in db:nrows("SELECT * FROM data WHERE id="..worldAux) do
-        retCurrentLevel=row.info
-    end
-  if(retCurrentLevel==NULL) then
-      retCurrentLevel = 0
-  end
-  return retCurrentLevel  
-end
-
-function setCurrentLevel(worldAux, levelAux)
-  local insertQuery = "INSERT INTO data VALUES ("..worldAux..", "..levelAux..");"
-  db:exec( insertQuery )
-  local updateQuery = "UPDATE data SET info="..levelAux.." WHERE id="..worldAux..";"
-  db:exec( updateQuery )
-end
-
-
-local function getStars(worldAux, levelAux)
-  local retStars
-    for row in db:nrows("SELECT * FROM world"..worldAux.." WHERE id="..levelAux) do
-        retStars=row.stars
-    end
-    if(retStars==NULL) then
-      retStars = 0
-    end
-  return retStars
-end
-
-function setStars(worldAux, levelAux, stars)
-  if(getStars(worldAux,levelAux)<=stars)then
-    local insertQuery = "INSERT INTO world"..worldAux.." VALUES ("..levelAux..", "..stars..");"
-    db:exec( insertQuery )
-    local updateQuery = "UPDATE world"..worldAux.." SET stars="..stars.." WHERE id="..levelAux..";"
-    db:exec( updateQuery )
-  end
-end
 
 function showMessage(message1, message2)
   rectangleMessage.alpha = 0.85

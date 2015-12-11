@@ -1,8 +1,8 @@
 local sceneName = "worlds"
 local composer = require( "composer" )
 local widget = require( "widget" )
-local gameNetwork = require( "gameNetwork" )
 local localization = require( "mod_localize" )
+local _s = localization.str
 
 local _s = localization.str
 
@@ -28,15 +28,15 @@ local optionsTransition = {
 
 ---------------------------------------------------------------------------------
 
+function goBack()
+  composer.gotoScene("menu", optionsTransition)
+end
+
 function checkPlatform()
   valWin = 0
   if(system.getInfo("environment") == "device" and "Win"==system.getInfo("platformName"))then
     valWin = contentHeight/15
   end
-end
-
-function goBack()
-  composer.gotoScene("menu", optionsTransition)
 end
 
 function scene:create( event )
@@ -159,26 +159,7 @@ function scene:show( event )
     end 
 end
 
-
-
-function scene:hide( event )
-  local sceneGroup = self.view
-  local phase = event.phase
-  if event.phase == "will" then
-        
-  elseif phase == "did" then
-      
-  end 
-end
-
-
-function scene:destroy( event )
-    local sceneGroup = self.view
-end
-
 scene:addEventListener( "create", scene )
 scene:addEventListener( "show", scene )
-scene:addEventListener( "hide", scene )
-scene:addEventListener( "destroy", scene )
 
 return scene
