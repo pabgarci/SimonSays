@@ -1,9 +1,9 @@
 local sceneName = "levels"
 
 local composer = require( "composer" )
-local sqlite3 = require( "sqlite3" )
 local widget = require( "widget" )
 local localization = require( "mod_localize" )
+local _s = localization.str
 
 local _s = localization.str
 
@@ -33,39 +33,15 @@ local optionsTransition = {
 
 ---------------------------------------------------------------------
 
+function goBack()
+  composer.gotoScene("worlds", optionsTransition)
+end
+
 function checkPlatform()
   valWin = 0
   if(system.getInfo("environment") == "device" and "Win"==system.getInfo("platformName"))then
     valWin = contentHeight/15
   end
-end
-
-function goBack()
-  composer.gotoScene("worlds", optionsTransition)
-end
-
-
-
-local function getCurrentLevel(worldAux)
-  local retCurrentLevel
-  for row in db:nrows("SELECT * FROM data WHERE id="..worldAux) do
-    retCurrentLevel=row.info
-  end
-  if(retCurrentLevel==nil) then
-    retCurrentLevel = 0
-  end
-  return retCurrentLevel  
-end
-
-local function getStars(worldAux, levelAux)
-  local retStars
-  for row in db:nrows("SELECT * FROM world"..worldAux.." WHERE id="..levelAux) do
-    retStars=row.stars
-  end
-  if(retStars==NULL) then
-    retStars = 0
-  end
-  return retStars
 end
 
 local function handleLevelSelect( event )
