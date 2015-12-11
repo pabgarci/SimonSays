@@ -114,18 +114,15 @@ local function facebookListener( event )
         --options are "login", "loginFailed", "loginCancelled", or "logout"
         if ( "login" == event.phase ) then
             local access_token = event.token
-            print("Login Successssssssssssssssssss")
         end
 
     elseif ( "request" == event.type ) then
-        print("facebook request")
         if ( not event.isError ) then
             local response = json.decode( event.response )
             --process response data here
         end
 
     elseif ( "dialog" == event.type ) then
-        print( "dialog", event.response )
         --handle dialog results here
     end
 end
@@ -150,7 +147,6 @@ function fbPublish(fbLevel, fbWorld, fbStars)
 end
 
 function fbListener()
-  print("SOY ESPECIAL")
 end
 
 fbPublish(12, 1, 3)
@@ -239,8 +235,6 @@ local function getSound()
   if(retSound==nil) then
       retSound = true
   end
-  print("GET SOUND:")
-  print(retSound)
   if(retSound==1)then
     boolSound=true
     elseif(retSound==0)then
@@ -257,8 +251,6 @@ local function getVibrate()
   if(retVibrate==nil) then
       boolVibrate = true
   end
-  print("GET VIBRATE:")
-  print(boolVibrate)
   if(retVibrate==1)then
     boolVibrate=true
     elseif(retVibrate==0)then
@@ -385,7 +377,6 @@ end
 function vibrate()
       if(getVibrate())then
         system.vibrate()
-        print("VIBRANDOooooooooooooooooooooooOOOOOOOOOOOOOOOOOooooooooooooooooooooooOOOOOOOOOOOOOOOO")
       end
 end
 
@@ -472,7 +463,6 @@ function nextLevel()
     end
   sequence = 1
   calculateFrequency()
-  print("FREQ = "..FREQ)
   playSound("next-level")
   vibrate()
 end
@@ -496,7 +486,6 @@ function checkLevel(worldAux, levelAux)
 end
 
 function changeColor(color)
-  print("changeColor")
   if(world == 1)then
     if(color==1)then
         rectangle11:setFillColor(1,1,0.29)
@@ -647,7 +636,6 @@ function checkSequence(num)
       
   if (countCheck>sequence and GAMEOVER)then  -- seq passed
     sequence = sequence +1
-    print(FREQ)
     TOUCH = false
     if(sequence==(level+4))then
       nextLevel()
@@ -936,8 +924,6 @@ end
   deleteMessage()
   SOUND = getSound()
   VIBRATE = getVibrate()
-  print("SOUND GAME:")
-  print (SOUND)
   if(composer.getVariable("origin")==1)then
     world = composer.getVariable("worldTarget")
     level = composer.getVariable("levelTarget")

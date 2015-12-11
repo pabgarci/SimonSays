@@ -108,8 +108,6 @@ local function getSound()
   if(retSound==nil) then
     boolSound = true
   end
-  print("GET SOUND:")
-  print(retSound)
   if(retSound==1)then
     boolSound=true
     elseif(retSound==0)then
@@ -126,8 +124,6 @@ local function getVibrate()
   if(retVibrate==nil) then
     boolVibrate = true
   end
-  print("GET VIBRATE:")
-  print(retVibrate)
   if(retVibrate==1)then
     boolVibrate=true
     elseif(retVibrate==0)then

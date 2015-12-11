@@ -145,7 +145,6 @@ function scene:show( event )
 
     local star = {} 
     for j = 1, getStars(worldL, i) do
-      print("level "..i.." stars "..getStars(worldL,i))
       star[j] = display.newPolygon( 0, 0, starVertices )
       star[j]:setFillColor( 1, 0.9, 0 )
       star[j].strokeWidth = 1
