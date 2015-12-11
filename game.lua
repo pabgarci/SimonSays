@@ -44,6 +44,7 @@ local rounded = contentWidth/40
 local arrayGame ={}
 local sequence = 1
 local time, totalTime, stars, level, world, valWin, buttonBack
+local shareLevel, shareWorld, shareStars
 local justOnce=0
 local countShow=1
 local countCheck=1
@@ -348,6 +349,10 @@ function nextLevel()
   initScreenGame()
   NEXTLEVEL=true
   TOUCH = true
+  shareStars=levelStars
+  shareWorld=world
+  shareLevel=level
+
   if(world == 1 and level == 6)then
     showStars(_s("world").." 1 ".._s("completed"), _s("tap to continue"), levelStars)
     unlockAchievement("first-world")
@@ -741,6 +746,13 @@ function rectangle36:touch( event )
     click(3,6)
     return true
   end
+end
+
+function imageShareFb:touch( event )
+    if event.phase == "ended" and TOUCH then
+        fbPublish(shareLevel, shareWorld, shareStars)
+        return true
+    end
 end
 
 local function loadLocalPlayerCallback( event )
