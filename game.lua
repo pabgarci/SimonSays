@@ -204,12 +204,12 @@ rectangleBackground = display.newRect( contentWidth/2, contentHeight/2, contentW
 
     soundGameOver = audio.loadSound("sounds/game-over.mp3")
     soundNextLevel = audio.loadSound("sounds/next-level.mp3")
-    soundRectangle1 = audio.loadSound("sounds/rectangle_1.mp3")
-    soundRectangle2 = audio.loadSound("sounds/rectangle_2.mp3")
-    soundRectangle3 = audio.loadSound("sounds/rectangle_3.mp3")
-    soundRectangle4 = audio.loadSound("sounds/rectangle_4.mp3")
-    soundRectangle5 = audio.loadSound("sounds/rectangle_5.mp3")
-    soundRectangle6 = audio.loadSound("sounds/rectangle_6.mp3")
+    soundRectangle1 = audio.loadSound("sounds/rectangle_11.mp3")
+    soundRectangle2 = audio.loadSound("sounds/rectangle_21.mp3")
+    soundRectangle3 = audio.loadSound("sounds/rectangle_31.mp3")
+    soundRectangle4 = audio.loadSound("sounds/rectangle_41.mp3")
+    soundRectangle5 = audio.loadSound("sounds/rectangle_51.mp3")
+    soundRectangle6 = audio.loadSound("sounds/rectangle_61.mp3")
 
 function showMessage(message1, message2)
   rectangleMessage.alpha = 0.85
