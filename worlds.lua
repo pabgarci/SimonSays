@@ -27,6 +27,10 @@ local optionsTransition = {
 
 ---------------------------------------------------------------------------------
 
+function goBackMenu()
+ composer.gotoScene("menu", optionsTransition)
+end
+
 function checkPlatform()
   valWin = 0
   if(system.getInfo("environment") == "device" and "Win"==system.getInfo("platformName"))then
@@ -97,7 +101,7 @@ function scene:create( event )
       fontSize = textSize*0.7,
       labelColor = { default={ 1, 1, 1 }, over={ 0, 0, 0, 0.5 }},
       fillColor = { default={ 1, 0.4, 0.4}, over={ 1, 0.1, 0.7, 0.4 }},
-      onRelease = goBack
+      onRelease = goBackMenu
     }
 
   buttonWorld1.x = display.contentCenterX

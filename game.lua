@@ -178,7 +178,7 @@ rectangleBackground = display.newRect( contentWidth/2, contentHeight/2, contentW
           fontSize = textSize*0.5,
           labelColor = { default={ 1, 1, 1 }, over={ 0, 0, 0, 0.5 }},
           fillColor = { default={ 1, 0.4, 0.4}, over={ 1, 0.1, 0.7, 0.4 }},
-          onRelease = goBack
+          onRelease = goBackMenu
         }
 
         buttonBack.x = contentWidth*3/4
@@ -656,7 +656,7 @@ function click(worldAux, num)
     timer.performWithDelay(FREQ/3,startSequence)
     elseif(ENDGAME==true)then
       showMessage("congratulations! you've finished the game =)")
-      timer.performWithDelay(5000,goBack)
+      timer.performWithDelay(5000,goBackMenu)
       else
         checkSequence(num)
         changeColor(num)

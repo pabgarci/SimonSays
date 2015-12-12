@@ -1,0 +1,16 @@
+Hello = Hei
+Who Says? = Hvem sier?
+start = start
+continue = fortsett
+level = level
+levels = levler
+world = verdener
+sound = lyd
+vibrate = vibrere
+achievements = prestasjoner
+back = tilbake
+completed = fullført
+tap to continue = press for å fortsette
+tap to retry = press for å prøve igjen
+select world = velg verden
+seq = sekvens

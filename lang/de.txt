@@ -1,0 +1,16 @@
+Hello = Hallo
+Who Says? = Wer sagt?
+start = start
+continue = weitermachen
+level = level
+levels = levels
+world = welt
+sound = ton
+vibrate = vibrieren
+achievements = errungenschaften
+back = zurück
+completed = abgeschlossen
+tap to continue = drücken um fortzufahren
+tap to retry = drücken um neuzustarten
+select world = welt auswählen
+seq = seq

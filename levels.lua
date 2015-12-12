@@ -34,6 +34,10 @@ local optionsTransition = {
 
 ---------------------------------------------------------------------
 
+function goBackWorlds()
+ composer.gotoScene("worlds", optionsTransition)
+end
+
 function checkPlatform()
   valWin = 0
   if(system.getInfo("environment") == "device" and "Win"==system.getInfo("platformName"))then
@@ -150,7 +154,7 @@ function scene:show( event )
       fontSize = textSize*0.7,
       labelColor = { default={ 1, 1, 1 }, over={ 0, 0, 0, 0.5 }},
       fillColor = { default={ 1, 0.4, 0.4}, over={ 1, 0.4, 0.4, 0.7 }},
-      onPress = goBack
+      onPress = goBackWorlds
     }
 
     buttonBackLevels.x = display.contentCenterX
