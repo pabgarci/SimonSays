@@ -125,22 +125,6 @@ local function facebookListener( event )
     end
 end
 
-function fbPublish(fbLevel, fbWorld, fbStars)
-  local fbMessage
-  if(fbWorld~=nil)then
-    fbMessage = "I've completed world "..fbWorld.." got "..fbStars.." stars"
-      else
-        fbMessage = "I've completed level "..fbLevel.." got "..fbStars.." stars"
-  end
-  fbObject = facebook.showDialog( "feed", 
-          { 
-            app_id = fbAppID, 
-            picture = "http://www.pabgarci.es/project/whosays/icon.png", 
-            description = fbMessage,
-            name = "Who Says? Try this adictive new game!",
-            link = "http://www.pabgarci.es/project/whosays/"  }, fbListener )
-end
-
 checkPlatform()
 
 rectangleBackground = display.newRect( contentWidth/2, contentHeight/2, contentWidth, height)
@@ -183,16 +167,12 @@ rectangleBackground = display.newRect( contentWidth/2, contentHeight/2, contentW
     starVertices = { 0,-8,1.763,-2.427,7.608,-2.472,2.853,0.927,4.702,6.472,0.0,3.0,-4.702,6.472,-2.853,0.927,-7.608,-2.472,-1.763,-2.427 }
 
     rectangleStars = display.newRect( contentWidth/2, contentHeight/2, contentWidth, height*2.5/10)
-    textStars1 = display.newText ("", contentWidth/2, (height/12)*4.2+valWin*2, native.systemFontBold, textSizeTitle*0.6)
-    textStars2 = display.newText ("", contentWidth/2, (height/12)*6.2+valWin*2, native.systemFontBold, textSize*0.5)
-    imageShareFb = display.newImageRect( "images/facebook-share-button.png", contentWidth/4, textSizeTitle*0.65 )
-    imageShareFb.x = contentWidth/2
-    imageShareFb.y = (height/12)*5.6+valWin*2
-    imageShareFb.isVisible = false
+    textStars1 = display.newText ("", contentWidth/2, (contentHeight/12)*5+valWin*2, native.systemFontBold, textSizeTitle*0.6)
+    textStars2 = display.newText ("", contentWidth/2, (contentHeight/12)*7.25+valWin*2, native.systemFontBold, textSize*0.5)
 
-    showStar1 = display.newPolygon( 0, (height/12)*4.9+valWin*2, starVertices )
-    showStar3 = display.newPolygon( 0, (height/12)*4.9+valWin*2, starVertices )
-    showStar2 = display.newPolygon( 0, (height/12)*4.9+valWin*2, starVertices )
+    showStar1 = display.newPolygon( 0, (contentHeight/12)*5.7+valWin*2, starVertices )
+    showStar2 = display.newPolygon( 0, (contentHeight/12)*5.7+valWin*2, starVertices )
+    showStar3 = display.newPolygon( 0, (contentHeight/12)*5.7+valWin*2, starVertices )
 
     buttonBack = widget.newButton
         {
@@ -211,6 +191,17 @@ rectangleBackground = display.newRect( contentWidth/2, contentHeight/2, contentW
         buttonBack.x = contentWidth*3/4
         buttonBack.y = contentHeight-originY/2-valWin*0.8
 
+        buttonFacebook = widget.newButton
+        {
+          defaultFile = "images/facebook-share-button.png",
+          overFile = "images/facebook-share-button.png",
+          width = contentWidth/4.5,
+          height = contentWidth/4.5*0.37
+        }
+
+        buttonFacebook.x = contentWidth/2
+        buttonFacebook.y = (contentHeight/12)*6.5+valWin*2
+
     soundGameOver = audio.loadSound("sounds/game-over.mp3")
     soundNextLevel = audio.loadSound("sounds/next-level.mp3")
     soundRectangle1 = audio.loadSound("sounds/rectangle_1.mp3")
@@ -228,13 +219,26 @@ function showMessage(message1, message2)
   textMessage2.alpha = 1
 end
 
+function deleteMessage()
+  rectangleMessage.alpha = 0
+  textMessage1.alpha = 0
+  textMessage2.alpha = 0
+  rectangleStars.alpha = 0
+  textStars1.alpha = 0
+  textStars2.alpha = 0
+  showStar1.alpha=0
+  showStar2.alpha=0
+  showStar3.alpha=0
+  buttonFacebook.isVisible = false
+end
+
 function showStars(message1, message2, levelStars)
   rectangleStars.alpha = 0.85
   textStars1.alpha = 1
   textStars2.alpha = 1
   textStars1.text = message1
   textStars2.text = message2
-  imageShareFb.isVisible = true
+  buttonFacebook.isVisible = true
   if(levelStars==1)then
     showStar1.x = contentWidth/2
     showStar1.alpha = 1
@@ -251,6 +255,23 @@ function showStars(message1, message2, levelStars)
     showStar2.alpha = 1
     showStar3.alpha = 1
   end
+end
+
+function fbPublish(fbLevel, fbWorld, fbStars)
+  local fbMessage
+  if(fbWorld~=nil)then
+    fbMessage = "I've completed world "..fbWorld.." got "..fbStars.." stars"
+      else
+        fbMessage = "I've completed level "..fbLevel.." got "..fbStars.." stars"
+  end
+  fbObject = facebook.showDialog( "feed", 
+          { 
+            app_id = fbAppID, 
+            picture = "http://www.pabgarci.es/project/whosays/icon.png", 
+            description = fbMessage,
+            name = "Who Says? Try this adictive new game!",
+            link = "http://www.pabgarci.es/project/whosays/"  }, fbListener )
+  deleteMessage()
 end
 
 function playSound(ach)
@@ -350,13 +371,11 @@ function nextLevel()
   NEXTLEVEL=true
   TOUCH = true
   shareStars=levelStars
-  shareWorld=world
-  shareLevel=level
-
   if(world == 1 and level == 6)then
     showStars(_s("world").." 1 ".._s("completed"), _s("tap to continue"), levelStars)
     unlockAchievement("first-world")
     setStars(world, level, levelStars)
+    shareWorld=world
     world = 2
     level = 1
     setCurrentLevel(world,level)
@@ -365,6 +384,7 @@ function nextLevel()
       showStars(_s("world").." 2 ".._s("completed"), _s("tap to continue"), levelStars)
       unlockAchievement("second-world")
       setStars(world, level, levelStars)
+      shareWorld=world
       world = 3
       level = 1
       setCurrentLevel(world,level)
@@ -373,6 +393,7 @@ function nextLevel()
       showStars(_s("world").." 3 ".._s("completed"), _s("tap to continue"), levelStars)
       unlockAchievement("third-world")
       setStars(world, level, levelStars)
+      shareWorld=world
       ENDGAME=true
       NEXTLEVEL=false
       world = 1
@@ -386,6 +407,7 @@ function nextLevel()
         unlockAchievement("three-stars")
       end
       setStars(world, level, levelStars)
+      shareLevel=level
       level = level + 1
     end
   sequence = 1
@@ -634,19 +656,6 @@ function showSequence()
   countCheck=1
 end
 
-function deleteMessage()
-  rectangleMessage.alpha = 0
-  textMessage1.alpha = 0
-  textMessage2.alpha = 0
-  rectangleStars.alpha = 0
-  textStars1.alpha = 0
-  textStars2.alpha = 0
-  showStar1.alpha=0
-  showStar2.alpha=0
-  showStar3.alpha=0
-  imageShareFb.isVisible = false
-end
-
 function click(worldAux, num)
   print("click")
   deleteMessage()
@@ -748,7 +757,7 @@ function rectangle36:touch( event )
   end
 end
 
-function imageShareFb:touch( event )
+function buttonFacebook:touch( event )
     if event.phase == "ended" and TOUCH then
         fbPublish(shareLevel, shareWorld, shareStars)
         return true
@@ -795,6 +804,7 @@ end
   rectangle34:addEventListener( "touch", rectangle34 )
   rectangle35:addEventListener( "touch", rectangle35 )
   rectangle36:addEventListener( "touch", rectangle36 )
+  buttonFacebook:addEventListener( "touch", buttonFacebook )
 
 function scene:create( event )
   local sceneGroup = self.view
@@ -825,7 +835,7 @@ function scene:create( event )
   sceneGroup:insert(textStars1) 
   sceneGroup:insert(textStars2) 
   sceneGroup:insert(buttonBack)
-  sceneGroup:insert(imageShareFb)
+  sceneGroup:insert(buttonFacebook)
 end
 
 function scene:show( event )
@@ -870,7 +880,6 @@ end
   calculateTotalTime()
   fillArray()
 ----------------------------------------------------------------
-
 scene:addEventListener( "create", scene )
 scene:addEventListener( "show", scene )
 scene:addEventListener( "hide", scene )

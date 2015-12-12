@@ -9,8 +9,8 @@ local optionsTransition = {
       time = 200
     }
 
-function goBack()
- composer.gotoScene("menu", optionsTransition)
+function goBack(scn)
+ composer.gotoScene(scn, optionsTransition)
 end
 
 local backscene = {
@@ -143,11 +143,10 @@ function initData()
 end
 
 function onKeyEvent( event )
-
   local phase = event.phase
   local keyName = event.keyName
   local scene = composer.getSceneName( "current" )
-  if("Win"==system.getInfo("platformName") or system.getInfo("environment") == "simulator")then
+  if("Win"==system.getInfo("platformName") or "Android"==system.getInfo("platformName") or system.getInfo("environment") == "simulator")then
     if ("back" == keyName and phase == "down") or ("b" == keyName and phase == "down")  then 
       if (backscene[scene]) then
         print("BACK")
