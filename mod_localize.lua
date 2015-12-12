@@ -29,7 +29,7 @@ function _M:setLocale( locale )
 
 	--load lang file
 	--fix by Misael M.
-	if(self.locale~="es" and self.locale~="en" and self.locale~="de" and self.locale~="no")then
+	if(self.locale~="es" and self.locale~="en" and self.locale~="de" and self.locale~="no" and self.locale~="pt")then
 		self.locale="en"
 		print("Not translation available for you locate, default=en")
 	end
