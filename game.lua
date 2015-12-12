@@ -100,7 +100,6 @@ end
 ---------------------------------------facebook-----------------------------------------
 
 local fbAppID = "867657486665321"  
-facebook.login( fbAppID, facebookListener, { "publish_actions" } )
 
 local function facebookListener( event )
 
@@ -252,6 +251,7 @@ end
 
 function fbPublish(fbLevel, fbWorld, fbStars)
   local fbMessage
+  facebook.login( fbAppID, facebookListener, { "publish_actions" } )
   if(fbWorld~=nil)then
     fbMessage = "I've completed world "..fbWorld.." got "..fbStars.." stars"
       else
