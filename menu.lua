@@ -262,10 +262,6 @@ function scene:hide( event )
   audio.fadeOut({channel=1, time=200})
 end
 
-function goBack(scene)
-  composer.gotoScene(scene, optionsTransition)
-end
-
 local function loadLocalPlayerCallback( event )
   playerName = event.data.alias
   showPlayerName()

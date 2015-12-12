@@ -10,6 +10,7 @@ local optionsTransition = {
     }
 
 function goBack(scn)
+ print("BACK TO: "..scn)
  composer.gotoScene(scn, optionsTransition)
 end
 
@@ -17,7 +18,7 @@ local backscene = {
     ["menu"] = function () os.exit() end,
     ["levels"] = function () goBack ("worlds") end,
     ["game"] = function () goBack ("menu") end,
-    ["worlds"] = function () goBack ("levels") end
+    ["worlds"] = function () goBack ("menu") end
   }
 
 function getCurrentLevel(worldAux)
@@ -149,8 +150,8 @@ function onKeyEvent( event )
   if("Win"==system.getInfo("platformName") or "Android"==system.getInfo("platformName") or system.getInfo("environment") == "simulator")then
     if ("back" == keyName and phase == "down") or ("b" == keyName and phase == "down")  then 
       if (backscene[scene]) then
-        print("BACK")
         backscene[scene]()
+        print("LOCAL SCENE: "..scene)
         return true
       end
     end

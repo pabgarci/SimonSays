@@ -34,10 +34,6 @@ local optionsTransition = {
 
 ---------------------------------------------------------------------
 
-function goBack()
-  composer.gotoScene("worlds", optionsTransition)
-end
-
 function checkPlatform()
   valWin = 0
   if(system.getInfo("environment") == "device" and "Win"==system.getInfo("platformName"))then

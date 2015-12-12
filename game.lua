@@ -93,10 +93,6 @@ function checkPlatform()
     end
 end
 
-function goBack()
- composer.gotoScene("menu", optionsTransition)
-end
-
 function calculateFrequency()
   FREQ = 800 - (level-1)*30
 end
@@ -109,7 +105,6 @@ facebook.login( fbAppID, facebookListener, { "publish_actions" } )
 local function facebookListener( event )
 
      if ( "session" == event.type ) then
-        --options are "login", "loginFailed", "loginCancelled", or "logout"
         if ( "login" == event.phase ) then
             local access_token = event.token
         end
@@ -117,11 +112,9 @@ local function facebookListener( event )
     elseif ( "request" == event.type ) then
         if ( not event.isError ) then
             local response = json.decode( event.response )
-            --process response data here
         end
 
     elseif ( "dialog" == event.type ) then
-        --handle dialog results here
     end
 end
 
@@ -628,7 +621,6 @@ end
 
 function saveCurrentTime()
   time = os.time()
-  print("CURRENT TIME: "..time)
 end
 
 function showSequence()
@@ -657,14 +649,13 @@ function showSequence()
 end
 
 function click(worldAux, num)
-  print("click")
   deleteMessage()
   if(NEXTLEVEL==true)then
     NEXTLEVEL=false
     GAMEOVER = true
     timer.performWithDelay(FREQ/3,startSequence)
     elseif(ENDGAME==true)then
-      showMessage("congratulations! you have finished the game =)")
+      showMessage("congratulations! you've finished the game =)")
       timer.performWithDelay(5000,goBack)
       else
         checkSequence(num)
@@ -766,13 +757,10 @@ end
 
 local function loadLocalPlayerCallback( event )
   playerName = event.data.alias
-  print("-------------------------------------------"..playerName)
   if(event.data.isError==false)then
     googlePlayGames=true
-    print("-------------------------------------------------------------true")
     else
       googlePlayGames=false
-      print("-------------------------------------------------------------false")
   end
 end
 
@@ -808,7 +796,6 @@ end
 
 function scene:create( event )
   local sceneGroup = self.view
-  print("create")
   sceneGroup:insert(rectangleBackground) 
   sceneGroup:insert(rectangle11)
   sceneGroup:insert(rectangle12)
