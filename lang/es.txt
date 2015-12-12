@@ -13,4 +13,4 @@ select world = mundos
 completed = completado
 tap to continue = pulsa para continuar
 tap to retry = pulsa para reintentar
-seq = seq
+seq = sec

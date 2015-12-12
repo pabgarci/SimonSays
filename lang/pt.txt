@@ -1,9 +1,9 @@
 Hello = Olá
 Who Says? = Quem diz?
-start = Começar
-continue = Continuar
-level = Nível
-levels = Níveis
+start = começar
+continue = continuar
+level = nível
+levels = níveis
 world = mundo
 sound = som
 vibrate = vibração

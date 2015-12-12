@@ -26,9 +26,11 @@ local height = contentHeight-originY*2
 local textSize = contentWidth/8
 local textSizeTitle = contentWidth/7
 
+local players = {}
+
 local textTitle, textPlayer, textStart, textLevels, textRanking, textSound, textVibrate, textLabel
 
-local buttonStart, buttonLevels, buttonRanking, checkboxSheet, checkSound, checkVibrate 
+local buttonStart, buttonLevels, buttonRanking, buttonMulti, checkboxSheet, checkSound, checkVibrate
 
 local checkboxOptions = {
         frames =
@@ -61,6 +63,46 @@ local optionsTransition = {
 
 function showPlayerName()
     textPlayer.text = "Player: "..playerName
+end
+
+
+function multiplayer()
+  gameNetwork.show( "waitingRoom")
+end
+
+local function requestCallback( event )
+    print( event.data.roomID )  --ID of the room that was created
+    multiplayer()
+end
+
+function requestRoom()
+
+gameNetwork.request( "createRoom",
+    {
+        playerIDs =  --array of players to invite
+        {
+            "45987354897345345",
+            "32238975789573445",
+            "17891241248435990"
+        },
+        maxAutoMatchPlayers = 3,     --optional, defaults to 0
+        minAutoMatchPlayers = 1,     --optional, defaults to 0
+        listener = requestCallback   --including this will override any listener set in 'gameNetwork.setRoomListener()'
+    }
+)
+end
+
+function loadFriends(event)
+local numFriends = table.getn(event.data)
+print("Num friends: "..numFriends)
+    for b=1, numFriends+1 do
+      print("ID: "..event.data[b].playerID)
+      print("Alias: "..event.data[b].alias)
+      players.id[b] = event.data[b].playerID
+      players.alias[b] = event.data[b].alias
+      print("ID S: "..players.id[b])
+      print("Alias S: "..players.alias[b])
+    end
 end
 
 local function onSoundPress( event )
@@ -113,6 +155,20 @@ function scene:create( event )
   textVibrate = display.newText (_s("vibrate"),contentWidth/1.4, (height/10)*8, native.systemFontBold, textSize/2)
   textVibrate:setFillColor( 1, 0.4, 0.4 )
   sceneGroup:insert(textVibrate)
+
+  buttonMulti = widget.newButton
+    {
+      label = "multiplayer",
+      emboss = false,
+      shape="roundedRect",
+      width = contentWidth*0.9,
+      height = textSize*1.3,
+      font = native.systemFontBold,
+      fontSize = textSize,
+      labelColor = { default={ 1, 1, 1 }, over={ 0, 0, 0, 0.5 } },
+      fillColor = { default={ 1, 0.4, 0.4}, over={ 1, 0.4, 0.4, 0.7 }},
+  
+    }
 
   buttonStart = widget.newButton
     {
@@ -190,6 +246,9 @@ function scene:create( event )
   checkVibrate.x = contentWidth/1.11
   checkVibrate.y = (height/10)*8
 
+  buttonMulti.x = display.contentCenterX
+  buttonMulti.y = (height/10)*2.4
+
   buttonStart.x = display.contentCenterX
   buttonStart.y = (height/10)*3.7
 
@@ -210,6 +269,7 @@ function scene:create( event )
   sceneGroup:insert(buttonStart)
   sceneGroup:insert(buttonLevels)
   sceneGroup:insert(buttonRanking)
+  sceneGroup:insert(buttonMulti)
 end
 
 function scene:show( event )
@@ -249,11 +309,21 @@ function scene:show( event )
         end
       end
     end
+
+    function buttonMulti:touch ( event )
+      local phase = event.phase
+      if "ended" == phase then
+        if("Android"==system.getInfo( "platformName" ) or system.getInfo("environment") == "simulator")then
+          gameNetwork.request( "loadFriends", { listener=loadFriends } )
+        end
+      end
+    end
        
     gameNetworkSetup()
     buttonStart:addEventListener( "touch", buttonStart )
     buttonLevels:addEventListener( "touch", buttonLevels )
-    buttonRanking:addEventListener( "touch", buttonRanking )   
+    buttonRanking:addEventListener( "touch", buttonRanking ) 
+    buttonMulti:addEventListener( "touch", buttonMulti )   
     end 
 end
 

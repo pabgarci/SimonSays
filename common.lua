@@ -18,6 +18,7 @@ local backscene = {
     ["menu"] = function () os.exit() end,
     ["levels"] = function () goBack ("worlds") end,
     ["game"] = function () goBack ("menu") end,
+    ["multiplayer"] = function () goBack ("menu") end,
     ["worlds"] = function () goBack ("menu") end
   }
 
