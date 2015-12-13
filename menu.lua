@@ -95,7 +95,8 @@ end
 function loadFriends(event)
 local numFriends = table.getn(event.data)
 print("Num friends: "..numFriends)
-    for b=1, numFriends+1 do
+    for b=1, numFriends, 1 do
+      print("NUM: "..b)
       print("ID: "..event.data[b].playerID)
       print("Alias: "..event.data[b].alias)
       players.id[b] = event.data[b].playerID
