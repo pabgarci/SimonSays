@@ -249,9 +249,12 @@ function showStars(message1, message2, levelStars)
   end
 end
 
+function fbLogin()
+  facebook.login( fbAppID, facebookListener, { "publish_actions" } )
+end
+
 function fbPublish(fbLevel, fbWorld, fbStars)
   local fbMessage
-  facebook.login( fbAppID, facebookListener, { "publish_actions" } )
   if(fbWorld~=nil)then
     fbMessage = "I've completed world "..fbWorld.." got "..fbStars.." stars"
       else
@@ -328,7 +331,6 @@ end
 function calculateTotalTime()
   local recResult = rec(level +3)
   totalTime = recResult*1800/FREQ
-  print("TOTAL TIME = "..totalTime)
 end
 
 function unlockAchievement(ach)
@@ -364,6 +366,9 @@ function nextLevel()
   NEXTLEVEL=true
   TOUCH = true
   shareStars=levelStars
+  if(levelStars==3)then
+    unlockAchievement("three-stars")
+  end
   if(world == 1 and level == 6)then
     showStars(_s("world").." 1 ".._s("completed"), _s("tap to continue"), levelStars)
     unlockAchievement("first-world")
@@ -396,9 +401,6 @@ function nextLevel()
       showStars(_s("level").." "..level.." ".._s("completed"), _s("tap to continue"), levelStars)
       setCurrentLevel(world,level+1)
       unlockAchievement("first-level")
-      if(stars==3)then
-        unlockAchievement("three-stars")
-      end
       setStars(world, level, levelStars)
       shareLevel=level
       level = level + 1
@@ -605,9 +607,6 @@ function calculateStars()
   local usedTime
   SAVE = true
   usedTime = os.time() - time
-  print("CURR TIME = "..os.time())
-  print("TIME = "..time)
-  print("USED TIME = "..usedTime)
   if(usedTime<totalTime*0.6)then
     currentStars = 3
     elseif(usedTime<totalTime)then
@@ -633,8 +632,7 @@ function showSequence()
   end
       
   if(countShow<=sequence)then
-    changeColor(arrayGame[countShow])   
-    print("Show sequence "..countShow..": "..arrayGame[countShow])     
+    changeColor(arrayGame[countShow])  
   end
 
   countShow=countShow+1
@@ -662,97 +660,6 @@ function click(worldAux, num)
         changeColor(num)
         timer.performWithDelay(FREQ/10,initScreenGame)
   end
-end
-
-function rectangle11:touch( event )
-  if event.phase == "ended" and TOUCH  then
-    click (1,1)
-    return true
-  end
-end
-
-function rectangle12:touch( event )
-  if event.phase == "ended"  and TOUCH then
-    click(1,2)
-    return true
-  end
-end
-
-function rectangle21:touch( event )
-  if event.phase == "ended" and TOUCH then
-    click(2,1)
-    return true
-  end
-end
-
-function rectangle22:touch( event )
-  if event.phase == "ended"  and TOUCH then
-    click(2,2)
-    return true
-  end
-end
-
-function rectangle23:touch( event )
-  if event.phase == "ended" and TOUCH  then
-    click(2,3)
-    return true
-  end
-end
-
-function rectangle24:touch( event )
-  if event.phase == "ended"  and TOUCH then
-    click(2,4)
-    return true
-  end
-end
-
-function rectangle31:touch( event )
-  if event.phase == "ended" and TOUCH then
-    click(3,1)
-    return true
-  end
-end
-
-function rectangle32:touch( event )
-  if event.phase == "ended"  and TOUCH then
-    click(3,2)
-    return true
-  end
-end
-
-function rectangle33:touch( event )
-  if event.phase == "ended" and TOUCH  then
-    click(3,3)
-    return true
-  end
-end
-
-function rectangle34:touch( event )
-  if event.phase == "ended"  and TOUCH then
-    click(3,4)
-    return true
-  end
-end
-
-function rectangle35:touch( event )
-  if event.phase == "ended" and TOUCH then
-    click(3,5)
-    return true
-  end
-end
-
-function rectangle36:touch( event )
-  if event.phase == "ended"  and TOUCH then
-    click(3,6)
-    return true
-  end
-end
-
-function buttonFacebook:touch( event )
-    if event.phase == "ended" and TOUCH then
-        fbPublish(shareLevel, shareWorld, shareStars)
-        return true
-    end
 end
 
 local function loadLocalPlayerCallback( event )
@@ -836,6 +743,7 @@ function scene:show( event )
 
   if ( event.phase == "did" ) then
     initScreenGame()
+    fbLogin()
     sequence=1
     countCheck=1
     countShow=1
@@ -845,7 +753,98 @@ function scene:show( event )
       elseif(justOnce==1)then
         justOnce=0
     end
+
+    function rectangle11:touch( event )
+    if event.phase == "ended" and TOUCH  then
+      click (1,1)
+      return true
+    end
   end
+
+  function rectangle12:touch( event )
+    if event.phase == "ended"  and TOUCH then
+      click(1,2)
+      return true
+    end
+  end
+
+  function rectangle21:touch( event )
+    if event.phase == "ended" and TOUCH then
+      click(2,1)
+      return true
+    end
+  end
+
+  function rectangle22:touch( event )
+    if event.phase == "ended"  and TOUCH then
+      click(2,2)
+      return true
+    end
+  end
+
+  function rectangle23:touch( event )
+    if event.phase == "ended" and TOUCH  then
+      click(2,3)
+      return true
+    end
+  end
+
+  function rectangle24:touch( event )
+    if event.phase == "ended"  and TOUCH then
+      click(2,4)
+      return true
+    end
+  end
+
+  function rectangle31:touch( event )
+    if event.phase == "ended" and TOUCH then
+      click(3,1)
+      return true
+    end
+  end
+
+  function rectangle32:touch( event )
+    if event.phase == "ended"  and TOUCH then
+      click(3,2)
+      return true
+    end
+  end
+
+  function rectangle33:touch( event )
+    if event.phase == "ended" and TOUCH  then
+      click(3,3)
+      return true
+    end
+  end
+
+  function rectangle34:touch( event )
+    if event.phase == "ended"  and TOUCH then
+      click(3,4)
+      return true
+    end
+  end
+
+  function rectangle35:touch( event )
+    if event.phase == "ended" and TOUCH then
+      click(3,5)
+      return true
+    end
+  end
+
+  function rectangle36:touch( event )
+    if event.phase == "ended"  and TOUCH then
+      click(3,6)
+      return true
+    end
+  end
+
+  function buttonFacebook:touch( event )
+      if event.phase == "ended" and TOUCH then
+          fbPublish(shareLevel, shareWorld, shareStars)
+          return true
+      end
+  end
+end
 end
 
 function scene:hide( event )
@@ -867,6 +866,7 @@ end
   calculateTotalTime()
   fillArray()
 ----------------------------------------------------------------
+
 scene:addEventListener( "create", scene )
 scene:addEventListener( "show", scene )
 scene:addEventListener( "hide", scene )

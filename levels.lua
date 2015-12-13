@@ -6,8 +6,6 @@ local widget = require( "widget" )
 local localization = require( "mod_localize" )
 local _s = localization.str
 
-local _s = localization.str
-
 local path = system.pathForFile( "data.db", system.DocumentsDirectory )
 local db = sqlite3.open( path )
 

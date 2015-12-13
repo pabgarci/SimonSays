@@ -10,7 +10,6 @@ local optionsTransition = {
     }
 
 function goBack(scn)
- print("BACK TO: "..scn)
  composer.gotoScene(scn, optionsTransition)
 end
 
@@ -151,7 +150,6 @@ function onKeyEvent( event )
     if ("back" == keyName and phase == "down") or ("b" == keyName and phase == "down")  then 
       if (backscene[scene]) then
         backscene[scene]()
-        print("LOCAL SCENE: "..scene)
         return true
       end
     end
