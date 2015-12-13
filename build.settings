@@ -3,16 +3,12 @@ settings =
 	
 	orientation =
 	{
-		-- Supported values for orientation:
-		-- portrait, portraitUpsideDown, landscapeLeft, landscapeRight
-
 		default = "portrait",
 		supported = { "portrait", }
 	},
 	
 	excludeFiles =
 	{
-		-- Include only the necessary icon files on each platform
 		iphone = { "Icon-*dpi.png", },
 		android = { "Icon.png", "Icon-Small-*.png", "Icon*@2x.png", },
 	},

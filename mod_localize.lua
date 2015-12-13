@@ -2,25 +2,11 @@
 -- mod_localize
 ----------------------------------------------------------
 
----Localization Module
--- This module aids in simple localization
--- for your CoronaSDK apps and games
--- @author Chris Byerley
--- @copyright 2014 develephant.com
--- @license MIT
--- @module mod_localize
 local _M = {}
 
 _M.locale = 'en'
 _M.langTbl = {}
----Sets the locale for localization.
--- See: http://framework.zend.com/manual/1.12/en/zend.locale.appendix.html
--- @string locale Set the locale for translation
--- @usage
--- local localize = require( "mod_localize" )
--- localize:setLocale( "es_ES" )
--- --Change locale later
--- localize:setLocale( "en_US" )
+
 function _M:setLocale( locale )
 	self.locale = locale
 
@@ -43,20 +29,7 @@ function _M:setLocale( locale )
 		end
 	end
 end
----Translates the string.
--- If you provide arguments then the method acts like
--- __string.format__, with token replacement.
--- @string strKey The string key to translate
--- @tparam args ... The extra arguments
--- @treturn string The translated string key
--- @usage 
--- local localize = require( "mod_localize" )
--- local _s = localize.str --place in shortcut var
---
--- localize:setLocale( "es_ES" )
--- 
--- print( _s( "I like muffins" ) )
--- > Me gustan los molletes
+
 function _M.str( strKey, ... )
 
 	local langTbl = _M.langTbl
@@ -72,8 +45,7 @@ function _M.str( strKey, ... )
 
 	error( "Localization string not found!  Please add \"" .. strKey .. "\" to lang/" .. _M.locale .. ".txt" )
 end
----Trims white space on both sides.
--- @local
+
 function string.trim(self)
    return self:match('^%s*(.-)%s*$')
 end

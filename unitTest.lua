@@ -1,4 +1,5 @@
 module(..., package.seeall)
+
 local lunatest = package.loaded.lunatest
 local assert_true = lunatest.assert_true
 local assert_boolean = lunatest.assert_boolean
@@ -77,9 +78,4 @@ function test_vibrate()
       boolVibrate=false
   end
   assert_boolean(boolVibrate, "Vibrate - No boolean found")
-end
-
-function test_forTesting()
-  boolean111=true
-  assert_true(boolean111, "Vibrate - Obtained false from de database")
 end

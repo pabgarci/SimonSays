@@ -119,7 +119,7 @@ function scene:create( event )
   sceneGroup:insert(buttonWorld1)
   sceneGroup:insert(buttonWorld2)
   sceneGroup:insert(buttonWorld3)
-  sceneGroup:insert( buttonBack )
+  sceneGroup:insert(buttonBack)
 end
 
 function scene:show( event )

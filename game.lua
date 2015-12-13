@@ -346,7 +346,7 @@ if(ach=="first-level")then
           id="CgkI-YvM6OkaEAIQCA"
            elseif (ach=="three-stars") then
             id="CgkI-YvM6OkaEAIQCQ"
-    end
+end
 
 gameNetwork.request( "unlockAchievement",
     {
@@ -504,11 +504,9 @@ function initScreenGame()
       textMessage1:setFillColor( 1, 0.4, 0.4 )
       textMessage2:setFillColor( 1, 1, 1 )
       if(world == 1)then
-       --rectangle11:setFillColor(1,1,0.78)
        rectangle11:setFillColor(gradient1)
        rectangle11.strokeWidth = 5
        rectangle11:setStrokeColor(1, 0.55, 0.55)
-       --rectangle12:setFillColor(1,0.88,0.88)
        rectangle12:setFillColor(gradient2)
        rectangle12.strokeWidth = 5
        rectangle12:setStrokeColor(1, 0.55, 0.55)
@@ -699,6 +697,7 @@ end
   rectangle34:addEventListener( "touch", rectangle34 )
   rectangle35:addEventListener( "touch", rectangle35 )
   rectangle36:addEventListener( "touch", rectangle36 )
+  buttonBack:addEventListener( "touch", buttonBack )
   buttonFacebook:addEventListener( "touch", buttonFacebook )
 
 function scene:create( event )
@@ -841,6 +840,13 @@ function scene:show( event )
   function buttonFacebook:touch( event )
       if event.phase == "ended" and TOUCH then
           fbPublish(shareLevel, shareWorld, shareStars)
+          return true
+      end
+  end
+
+  function buttonBack:touch( event )
+      if event.phase == "ended" and TOUCH then
+          goBack("menu")
           return true
       end
   end

@@ -9,9 +9,6 @@ local playerName, googlePlayGames
 
 local _s = localization.str
 
-local path = system.pathForFile( "data.db", system.DocumentsDirectory )
-local db = sqlite3.open( path )
-
 local scene = composer.newScene( sceneName )
 
 local background, SOUND

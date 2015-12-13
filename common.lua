@@ -7,7 +7,7 @@ local db = sqlite3.open( path )
 local optionsTransition = {
       effect = "zoomInOutFade",
       time = 200
-    }
+  }
 
 function goBack(scn)
  composer.gotoScene(scn, optionsTransition)
